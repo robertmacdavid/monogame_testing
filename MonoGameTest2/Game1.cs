@@ -32,6 +32,13 @@ namespace MonoGameTest2
 
         private float distance = 100;
 
+
+        private int standSeq;
+        private int walkSeq;
+
+        private Vector2 Zero2 = new Vector2(0, 0);
+        private bool isWalking = false;
+
         public Game1()
         {
             graphics = new GraphicsDeviceManager(this);
@@ -71,6 +78,13 @@ namespace MonoGameTest2
             int windowWidth = graphics.GraphicsDevice.Viewport.Width;
             int windowHeight = graphics.GraphicsDevice.Viewport.Height;
             animatedSprite = new AnimatedSprite(avatar, new Vector2(windowWidth / 2, windowHeight / 2), 4, 4);
+
+
+            standSeq = animatedSprite.AddSequence(0, 4, 4, AnimationPriority.STANDING);
+            walkSeq = animatedSprite.AddSequence(0, 16, 32, AnimationPriority.WALKING);
+
+            animatedSprite.StartSequence(standSeq);
+
 
             // unload everything that has been loaded to the CM "Content"
             // this.Content.Unload()
@@ -113,12 +127,29 @@ namespace MonoGameTest2
             if (keyState.IsKeyDown(Keys.Down) | keyState.IsKeyDown(Keys.S))
                 userVelocity.Y = 1;
 
+            if (userVelocity.Equals(Zero2))
+            {
+                if (isWalking)
+                {
+                    isWalking = false;
+                    animatedSprite.EndSequence(walkSeq);
+                }
+            }
+            else
+            {
+                if (!isWalking)
+                {
+                    isWalking = true;
+                    animatedSprite.StartSequence(walkSeq);
+                }
+            }
+
 
             // Move 100 pixels per second.
             animatedSprite.Move(userVelocity * 100, (float)gameTime.ElapsedGameTime.TotalSeconds);
 
             score++;
-            animatedSprite.Update();
+            animatedSprite.Update(gameTime);
             earthAngle += 0.01f;
 
             blueAngle += blueSpeed;
