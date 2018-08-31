@@ -31,6 +31,9 @@ namespace MonoGameTest2.Desktop
         private float redSpeed = 0.022f;
 
         private float distance = 100;
+
+
+        private Vector2 userPosition;
         // testing git
 
         public Game1()
@@ -49,7 +52,17 @@ namespace MonoGameTest2.Desktop
         /// </summary>
         protected override void Initialize()
         {
+            Window.Title = "Yeah Bitch.";
+            int windowWidth = graphics.GraphicsDevice.Viewport.Width;
+            int windowHeight = graphics.GraphicsDevice.Viewport.Height;
+
             // TODO: Add your initialization logic here
+            userPosition = new Vector2(windowWidth/2, windowHeight/2);
+
+
+            
+
+
             base.Initialize();
         }
 
@@ -92,8 +105,26 @@ namespace MonoGameTest2.Desktop
         /// <param name="gameTime">Provides a snapshot of timing values.</param>
         protected override void Update(GameTime gameTime)
         {
-            if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
+
+            KeyboardState keyState = Keyboard.GetState();
+
+            if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || keyState.IsKeyDown(Keys.Escape))
                 Exit();
+
+            Vector2 userVelocity = new Vector2(0, 0);
+
+            if (keyState.IsKeyDown(Keys.Right) | keyState.IsKeyDown(Keys.D))
+                userVelocity.X = 1;
+            if (keyState.IsKeyDown(Keys.Left) | keyState.IsKeyDown(Keys.A))
+                userVelocity.X = -1;
+            if (keyState.IsKeyDown(Keys.Up) | keyState.IsKeyDown(Keys.W))
+                userVelocity.Y = -1;
+            if (keyState.IsKeyDown(Keys.Down) | keyState.IsKeyDown(Keys.S))
+                userVelocity.Y = 1;
+
+
+            userPosition += userVelocity * 5;
+
 
             // TODO: Add your update logic here
             score++;
@@ -152,7 +183,7 @@ namespace MonoGameTest2.Desktop
             spriteBatch.Draw(red, center + redPosition, Color.White);
             spriteBatch.End();
 
-            animatedSprite.Draw(spriteBatch, new Vector2(400, 200));
+            animatedSprite.Draw(spriteBatch, userPosition);
 
             base.Draw(gameTime);
         }
