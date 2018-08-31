@@ -19,6 +19,7 @@ namespace MonoGameTest2.Desktop
         private SpriteFont font;
         private int score = 0;
         private float earthAngle = 0.0f;
+        // testing git
 
         public Game1()
         {
