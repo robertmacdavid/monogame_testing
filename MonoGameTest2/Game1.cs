@@ -1,6 +1,7 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
+using System;
 
 namespace MonoGameTest2.Desktop
 {
@@ -15,10 +16,21 @@ namespace MonoGameTest2.Desktop
         private Texture2D earth;
         private Texture2D mars;
         private Texture2D avatar;
+        private Texture2D red, green, blue;
         private AnimatedSprite animatedSprite;
         private SpriteFont font;
         private int score = 0;
         private float earthAngle = 0.0f;
+
+        private float blueAngle = 0;
+        private float greenAngle = 0;
+        private float redAngle = 0;
+
+        private float blueSpeed = 0.025f;
+        private float greenSpeed = 0.017f;
+        private float redSpeed = 0.022f;
+
+        private float distance = 100;
         // testing git
 
         public Game1()
@@ -38,7 +50,6 @@ namespace MonoGameTest2.Desktop
         protected override void Initialize()
         {
             // TODO: Add your initialization logic here
-
             base.Initialize();
         }
 
@@ -59,6 +70,10 @@ namespace MonoGameTest2.Desktop
             animatedSprite = new AnimatedSprite(avatar, 4, 4);
             // unload everything that has been loaded to the CM "Content"
             // this.Content.Unload()
+
+            red = this.Content.Load<Texture2D>("images/red");
+            green = this.Content.Load<Texture2D>("images/green");
+            blue = this.Content.Load<Texture2D>("images/blue");
         }
 
         /// <summary>
@@ -84,6 +99,10 @@ namespace MonoGameTest2.Desktop
             score++;
             animatedSprite.Update();
             earthAngle += 0.01f;
+
+            blueAngle += blueSpeed;
+            greenAngle += greenSpeed;
+            redAngle += redSpeed;
 
             base.Update(gameTime);
         }
@@ -114,6 +133,24 @@ namespace MonoGameTest2.Desktop
 
 
             this.spriteBatch.End();
+
+            Vector2 bluePosition = new Vector2(
+                (float)Math.Cos(blueAngle) * distance,
+                (float)Math.Sin(blueAngle) * distance);
+            Vector2 greenPosition = new Vector2(
+                            (float)Math.Cos(greenAngle) * distance,
+                            (float)Math.Sin(greenAngle) * distance);
+            Vector2 redPosition = new Vector2(
+                            (float)Math.Cos(redAngle) * distance,
+                            (float)Math.Sin(redAngle) * distance);
+
+            Vector2 center = new Vector2(300, 140);
+
+            spriteBatch.Begin(SpriteSortMode.Immediate, BlendState.Additive);
+            spriteBatch.Draw(blue, center + bluePosition, Color.White);
+            spriteBatch.Draw(green, center + greenPosition, Color.White);
+            spriteBatch.Draw(red, center + redPosition, Color.White);
+            spriteBatch.End();
 
             animatedSprite.Draw(spriteBatch, new Vector2(400, 200));
 
