@@ -3,7 +3,7 @@ using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using System;
 
-namespace MonoGameTest2.Desktop
+namespace MonoGameTest2
 {
     /// <summary>
     /// This is the main type for your game.
@@ -32,10 +32,6 @@ namespace MonoGameTest2.Desktop
 
         private float distance = 100;
 
-
-        private Vector2 userPosition;
-        // testing git
-
         public Game1()
         {
             graphics = new GraphicsDeviceManager(this);
@@ -53,15 +49,6 @@ namespace MonoGameTest2.Desktop
         protected override void Initialize()
         {
             Window.Title = "Yeah Bitch.";
-            int windowWidth = graphics.GraphicsDevice.Viewport.Width;
-            int windowHeight = graphics.GraphicsDevice.Viewport.Height;
-
-            // TODO: Add your initialization logic here
-            userPosition = new Vector2(windowWidth/2, windowHeight/2);
-
-
-            
-
 
             base.Initialize();
         }
@@ -80,7 +67,11 @@ namespace MonoGameTest2.Desktop
             mars = this.Content.Load<Texture2D>("images/mars");
             font = Content.Load<SpriteFont>("default_font");
             avatar = this.Content.Load<Texture2D>("images/SmileyWalk");
-            animatedSprite = new AnimatedSprite(avatar, 4, 4);
+
+            int windowWidth = graphics.GraphicsDevice.Viewport.Width;
+            int windowHeight = graphics.GraphicsDevice.Viewport.Height;
+            animatedSprite = new AnimatedSprite(avatar, new Vector2(windowWidth / 2, windowHeight / 2), 4, 4);
+
             // unload everything that has been loaded to the CM "Content"
             // this.Content.Unload()
 
@@ -123,10 +114,9 @@ namespace MonoGameTest2.Desktop
                 userVelocity.Y = 1;
 
 
-            userPosition += userVelocity * 5;
+            // Move 100 pixels per second.
+            animatedSprite.Move(userVelocity * 100, (float)gameTime.ElapsedGameTime.TotalSeconds);
 
-
-            // TODO: Add your update logic here
             score++;
             animatedSprite.Update();
             earthAngle += 0.01f;
@@ -183,7 +173,7 @@ namespace MonoGameTest2.Desktop
             spriteBatch.Draw(red, center + redPosition, Color.White);
             spriteBatch.End();
 
-            animatedSprite.Draw(spriteBatch, userPosition);
+            animatedSprite.Draw(spriteBatch);
 
             base.Draw(gameTime);
         }

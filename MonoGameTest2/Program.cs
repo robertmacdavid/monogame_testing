@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace MonoGameTest2.Desktop
+namespace MonoGameTest2
 {
     /// <summary>
     /// The main class.
