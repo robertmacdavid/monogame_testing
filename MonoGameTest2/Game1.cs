@@ -80,10 +80,10 @@ namespace MonoGameTest2
             animatedSprite = new AnimatedSprite(avatar, new Vector2(windowWidth / 2, windowHeight / 2), 4, 4);
 
 
-            standSeq = animatedSprite.AddSequence(0, 4, 4, AnimationPriority.STANDING);
-            walkSeq = animatedSprite.AddSequence(0, 16, 32, AnimationPriority.WALKING);
+            standSeq = animatedSprite.AddAnimation(0, 4, 4, 0);
+            walkSeq = animatedSprite.AddAnimation(0, 16, 32, 1);
 
-            animatedSprite.StartSequence(standSeq);
+            animatedSprite.SetAnimation(standSeq);
 
 
             // unload everything that has been loaded to the CM "Content"
@@ -132,7 +132,7 @@ namespace MonoGameTest2
                 if (isWalking)
                 {
                     isWalking = false;
-                    animatedSprite.EndSequence(walkSeq);
+                    animatedSprite.StopAnimation(walkSeq);
                 }
             }
             else
@@ -140,7 +140,7 @@ namespace MonoGameTest2
                 if (!isWalking)
                 {
                     isWalking = true;
-                    animatedSprite.StartSequence(walkSeq);
+                    animatedSprite.SetAnimation(walkSeq);
                 }
             }
 
