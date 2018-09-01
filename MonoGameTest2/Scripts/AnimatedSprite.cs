@@ -22,7 +22,7 @@ namespace MonoGameTest2
         private readonly int _totalFrames;
 
         private List<Animation> _animations;
-        private SortedSet<Animation> _activeAnimations;
+        public SortedSet<Animation> _activeAnimations;
 
         /// <summary>
         /// Creates a sprite with animations.
@@ -164,7 +164,7 @@ namespace MonoGameTest2
         // Returns the index of the frame to be drawn
         public int Update()
         {
-            double callTime = GameManager.Instance.DeltaTime * 1000;
+            double callTime = GameManager.Instance.GameTime.TotalGameTime.Milliseconds;
             if (!_hasBeenUpdated)
             {
                 _hasBeenUpdated = true;

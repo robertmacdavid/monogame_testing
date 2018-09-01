@@ -13,6 +13,7 @@ namespace MonoGameTest2.Managers
         private static GameManager _instance;
         public static GameManager Instance { get { return _instance ?? (_instance = new GameManager()); } }
 
+        public GameTime GameTime;
         public float DeltaTime;
         public Player Player;
         public KeyboardState PreviousKeyboardState;
@@ -36,6 +37,7 @@ namespace MonoGameTest2.Managers
                 _showDebugInfo = !_showDebugInfo;
             }
 
+            GameTime = gameTime;
             DeltaTime = (float)gameTime.ElapsedGameTime.TotalSeconds;
 
             Player.HandleInput();
@@ -50,7 +52,7 @@ namespace MonoGameTest2.Managers
             var debugInfo = "Debug Info\n" +
                             $"Delta Time: {DeltaTime}\n" +
                             $"Player Position: {Player.Position}\n" +
-                            $"Player Animation: {Player.CurrentAnimation}\n";
+                            $"Player Animation: {Player._activeAnimations}\n";
 
             spriteBatch.Begin();
             Player.Draw(spriteBatch);
