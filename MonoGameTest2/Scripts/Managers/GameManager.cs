@@ -14,9 +14,12 @@ namespace MonoGameTest2.Managers
         public float DeltaTime;
         public Player Player;
 
+        private SpriteFont _font;
+
         public void LoadContent(ContentManager contentManager)
         {
             var avatar = contentManager.Load<Texture2D>("images/SmileyWalk");
+            _font = contentManager.Load<SpriteFont>("default_font");
 
             Player = new Player(avatar, new Vector2(0, 0));
             Player.LoadContent(contentManager);
@@ -33,6 +36,10 @@ namespace MonoGameTest2.Managers
         public void Draw(SpriteBatch spriteBatch)
         {
             Player.Draw(spriteBatch);
+
+            spriteBatch.Begin();
+            spriteBatch.DrawString(_font, string.Format("Debug Info\nDelta Time: {0}\nPlayer Position: {1}", DeltaTime, Player.Position), new Vector2(0, 0), Color.White);
+            spriteBatch.End();
         }
     }
 }
