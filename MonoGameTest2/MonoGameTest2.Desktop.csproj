@@ -64,6 +64,7 @@
   <ItemGroup>
     <Compile Include="Scripts\Controllers\IInputController.cs" />
     <Compile Include="Scripts\Entities\Character.cs" />
+    <Compile Include="Scripts\Helpers\KeyboardHelper.cs" />
     <Compile Include="Scripts\Managers\GameManager.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Game1.cs" />

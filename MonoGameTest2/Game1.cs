@@ -33,13 +33,6 @@ namespace MonoGameTest2
 
         private float distance = 100;
 
-
-        private int standSeq;
-        private int walkSeq;
-
-        private Vector2 Zero2 = new Vector2(0, 0);
-        private bool isWalking = false;
-
         public Game1()
         {
             graphics = new GraphicsDeviceManager(this);
@@ -102,9 +95,7 @@ namespace MonoGameTest2
         /// <param name="gameTime">Provides a snapshot of timing values.</param>
         protected override void Update(GameTime gameTime)
         {
-            KeyboardState keyState = Keyboard.GetState();
-
-            if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || keyState.IsKeyDown(Keys.Escape))
+            if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
                 Exit();
 
             score++;
