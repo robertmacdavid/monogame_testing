@@ -14,6 +14,7 @@ namespace MonoGameTest2.Managers
         public static GameManager Instance { get { return _instance ?? (_instance = new GameManager()); } }
 
         public float DeltaTime;
+        public double CurrentTimeMS;
         public Player Player;
         public KeyboardState PreviousKeyboardState;
 
@@ -37,6 +38,7 @@ namespace MonoGameTest2.Managers
             }
 
             DeltaTime = (float)gameTime.ElapsedGameTime.TotalSeconds;
+            CurrentTimeMS = gameTime.TotalGameTime.TotalMilliseconds;
 
             Player.HandleInput();
             Player.Update();
