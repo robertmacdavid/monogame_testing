@@ -16,6 +16,7 @@ namespace MonoGameTest2
     {
         public int Rows { get; private set; }
         public int Columns { get; private set; }
+        public int CurrentAnimation { get; private set; }
 
         private int _currentFrame;
         private readonly int _totalFrames;
@@ -47,7 +48,7 @@ namespace MonoGameTest2
         public AnimatedSprite(Texture2D texture, Vector2 initialPosition, int rows, int columns) : this(texture, initialPosition, rows, columns, rows*columns) { }
 
         /// <summary>
-        /// Adds a sequence description to this sprite.
+        /// Adds an animation to this sprite.
         /// </summary>
         /// <param name="startFrame"></param>
         /// <param name="numFrames"></param>
@@ -67,6 +68,7 @@ namespace MonoGameTest2
         /// <param name="index">The index of the sequence.</param>
         public void SetAnimation(int index)
         {
+            CurrentAnimation = index;
             Animation animation = _animations[index];
 
             if (!_activeAnimations.Contains(animation))
@@ -114,9 +116,7 @@ namespace MonoGameTest2
             Rectangle sourceRectangle = new Rectangle(Width * column, Height * row, Width, Height);
             Rectangle destinationRectangle = new Rectangle((int)Position.X, (int)Position.Y, Width, Height);
 
-            spriteBatch.Begin();
             spriteBatch.Draw(Texture, destinationRectangle, sourceRectangle, Color.White);
-            spriteBatch.End();
         }
     }
 

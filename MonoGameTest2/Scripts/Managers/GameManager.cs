@@ -46,14 +46,21 @@ namespace MonoGameTest2.Managers
 
         public void Draw(SpriteBatch spriteBatch)
         {
+            // TODO: Put this string somewhere else, like content.
+            var debugInfo = "Debug Info\n" +
+                            $"Delta Time: {DeltaTime}\n" +
+                            $"Player Position: {Player.Position}\n" +
+                            $"Player Animation: {Player.CurrentAnimation}\n";
+
+            spriteBatch.Begin();
             Player.Draw(spriteBatch);
 
             if (_showDebugInfo)
             {
-                spriteBatch.Begin();
-                spriteBatch.DrawString(_font, string.Format("Debug Info\nDelta Time: {0}\nPlayer Position: {1}", DeltaTime, Player.Position), new Vector2(0, 0), Color.White);
-                spriteBatch.End();
+                spriteBatch.DrawString(_font, debugInfo, new Vector2(0, 0), Color.White);
             }
+
+            spriteBatch.End();
         }
     }
 }

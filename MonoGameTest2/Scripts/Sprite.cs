@@ -28,9 +28,7 @@ namespace MonoGameTest2
 
         public void Draw(SpriteBatch spriteBatch)
         {
-            spriteBatch.Begin();
             spriteBatch.Draw(Texture, Position, Color.White);
-            spriteBatch.End();
         }
     }
 }

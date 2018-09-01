@@ -29,7 +29,7 @@ namespace MonoGameTest2.Entites
             SetAnimation(_standAnimID);
         }
 
-        public void Draw()
+        public new void Draw(SpriteBatch spriteBatch)
         {
             if (Velocity == Vector2.Zero)
             {
@@ -47,6 +47,8 @@ namespace MonoGameTest2.Entites
                     SetAnimation(_walkAnimID);
                 }
             }
+
+            base.Draw(spriteBatch);
         }
 
         public void HandleInput()
