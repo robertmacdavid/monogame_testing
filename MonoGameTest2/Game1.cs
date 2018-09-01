@@ -3,6 +3,8 @@ using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using System;
 
+using MonoGameTest2.Managers;
+
 namespace MonoGameTest2
 {
     /// <summary>
@@ -17,7 +19,6 @@ namespace MonoGameTest2
         private Texture2D mars;
         private Texture2D avatar;
         private Texture2D red, green, blue;
-        private AnimatedSprite animatedSprite;
         private SpriteFont font;
         private int score = 0;
         private float earthAngle = 0.0f;
@@ -69,29 +70,20 @@ namespace MonoGameTest2
             // Create a new SpriteBatch, which can be used to draw textures.
             spriteBatch = new SpriteBatch(GraphicsDevice);
 
-            venus = this.Content.Load<Texture2D>("images/venus");
-            earth = this.Content.Load<Texture2D>("images/earth");
-            mars = this.Content.Load<Texture2D>("images/mars");
+            venus = Content.Load<Texture2D>("images/venus");
+            earth = Content.Load<Texture2D>("images/earth");
+            mars = Content.Load<Texture2D>("images/mars");
             font = Content.Load<SpriteFont>("default_font");
-            avatar = this.Content.Load<Texture2D>("images/SmileyWalk");
-
-            int windowWidth = graphics.GraphicsDevice.Viewport.Width;
-            int windowHeight = graphics.GraphicsDevice.Viewport.Height;
-            animatedSprite = new AnimatedSprite(avatar, new Vector2(windowWidth / 2, windowHeight / 2), 4, 4);
-
-
-            standSeq = animatedSprite.AddAnimation(0, 4, 4, 0);
-            walkSeq = animatedSprite.AddAnimation(0, 16, 32, 1);
-
-            animatedSprite.SetAnimation(standSeq);
-
+            avatar = Content.Load<Texture2D>("images/SmileyWalk");
 
             // unload everything that has been loaded to the CM "Content"
             // this.Content.Unload()
 
-            red = this.Content.Load<Texture2D>("images/red");
-            green = this.Content.Load<Texture2D>("images/green");
-            blue = this.Content.Load<Texture2D>("images/blue");
+            red = Content.Load<Texture2D>("images/red");
+            green = Content.Load<Texture2D>("images/green");
+            blue = Content.Load<Texture2D>("images/blue");
+
+            GameManager.Instance.LoadContent(Content);
         }
 
         /// <summary>
@@ -110,51 +102,19 @@ namespace MonoGameTest2
         /// <param name="gameTime">Provides a snapshot of timing values.</param>
         protected override void Update(GameTime gameTime)
         {
-
             KeyboardState keyState = Keyboard.GetState();
 
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || keyState.IsKeyDown(Keys.Escape))
                 Exit();
 
-            Vector2 userVelocity = new Vector2(0, 0);
-
-            if (keyState.IsKeyDown(Keys.Right) | keyState.IsKeyDown(Keys.D))
-                userVelocity.X = 1;
-            if (keyState.IsKeyDown(Keys.Left) | keyState.IsKeyDown(Keys.A))
-                userVelocity.X = -1;
-            if (keyState.IsKeyDown(Keys.Up) | keyState.IsKeyDown(Keys.W))
-                userVelocity.Y = -1;
-            if (keyState.IsKeyDown(Keys.Down) | keyState.IsKeyDown(Keys.S))
-                userVelocity.Y = 1;
-
-            if (userVelocity.Equals(Zero2))
-            {
-                if (isWalking)
-                {
-                    isWalking = false;
-                    animatedSprite.StopAnimation(walkSeq);
-                }
-            }
-            else
-            {
-                if (!isWalking)
-                {
-                    isWalking = true;
-                    animatedSprite.SetAnimation(walkSeq);
-                }
-            }
-
-
-            // Move 100 pixels per second.
-            animatedSprite.Move(userVelocity * 100, (float)gameTime.ElapsedGameTime.TotalSeconds);
-
             score++;
-            animatedSprite.Update(gameTime);
             earthAngle += 0.01f;
 
             blueAngle += blueSpeed;
             greenAngle += greenSpeed;
             redAngle += redSpeed;
+
+            GameManager.Instance.Update(gameTime);
 
             base.Update(gameTime);
         }
@@ -204,7 +164,7 @@ namespace MonoGameTest2
             spriteBatch.Draw(red, center + redPosition, Color.White);
             spriteBatch.End();
 
-            animatedSprite.Draw(spriteBatch);
+            GameManager.Instance.Draw(spriteBatch);
 
             base.Draw(gameTime);
         }

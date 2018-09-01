@@ -5,6 +5,8 @@ using System.Text;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework;
 
+using MonoGameTest2.Managers;
+
 namespace MonoGameTest2
 {
     /// <summary>
@@ -92,11 +94,11 @@ namespace MonoGameTest2
         }
 
         // Computes the frame index of the highest priority active sequence
-        public void Update(GameTime gameTime)
+        public void Update()
         {
             Animation topSequence = _activeAnimations.Max();
 
-            _currentFrame = topSequence.Update(gameTime);
+            _currentFrame = topSequence.Update();
             if (_currentFrame == -1)
             {
                 _activeAnimations.Remove(topSequence);
@@ -160,9 +162,9 @@ namespace MonoGameTest2
         }
 
         // Returns the index of the frame to be drawn
-        public int Update(GameTime gameTime)
+        public int Update()
         {
-            double callTime = gameTime.TotalGameTime.TotalMilliseconds;
+            double callTime = GameManager.Instance.DeltaTime * 1000;
             if (!_hasBeenUpdated)
             {
                 _hasBeenUpdated = true;

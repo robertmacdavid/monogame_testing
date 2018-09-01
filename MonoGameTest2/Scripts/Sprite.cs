@@ -2,6 +2,8 @@
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Design;
 
+using MonoGameTest2.Managers;
+
 namespace MonoGameTest2
 {
     public class Sprite
@@ -19,14 +21,11 @@ namespace MonoGameTest2
             Height = texture.Height;
         }
 
-        // TODO: Don't pass deltaTime? Read from GameManager???
-        public void Move(Vector2 velocity, float deltaTime)
+        public void Move(Vector2 velocity)
         {
-            
-            Position += velocity * deltaTime;
+            Position += velocity * GameManager.Instance.DeltaTime;
         }
 
-        // TODO: Don't pass spriteBatch. Handle it in GameManager.
         public void Draw(SpriteBatch spriteBatch)
         {
             spriteBatch.Begin();
