@@ -12,13 +12,18 @@ namespace MonoGameTest2
         public Texture2D Texture { get; private set; }
         public int Width { get; protected set; }
         public int Height { get; protected set; }
+        public Rectangle Mask { get; set; }
 
-        public Sprite(Texture2D texture, Vector2 initialPosition)
+        public Sprite(Texture2D texture, Vector2 initialPosition, Rectangle? Mask = null)
         {
             Texture = texture;
             Position = initialPosition;
             Width = texture.Width;
             Height = texture.Height;
+            if (Mask == null)
+                this.Mask = new Rectangle(0, 0, Width, Height);
+            else
+                this.Mask = (Rectangle)Mask;
         }
 
         public void Move(Vector2 velocity)

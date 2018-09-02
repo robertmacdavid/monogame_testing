@@ -16,7 +16,7 @@ namespace MonoGameTest2
     {
         public int Rows { get; private set; }
         public int Columns { get; private set; }
-        public int CurrentAnimation { get; private set; }
+        public Animation CurrentAnimation { get; private set; }
 
         private int _currentFrame;
         private readonly int _totalFrames;
@@ -55,11 +55,12 @@ namespace MonoGameTest2
         /// <param name="framerate"></param>
         /// <param name="priority"></param>
         /// <returns>An ID for this animation.</returns>
-        public int AddAnimation(int startFrame, int numFrames, int framerate, int priority)
+        public int AddAnimation(int startFrame, int numFrames, int framerate, int priority, bool loop=true)
         {
-            var animation = new Animation(startFrame, numFrames, framerate, priority);
+            int animationID = _animations.Count;
+            var animation = new Animation(startFrame, numFrames, framerate, priority, animationID, loop);
             _animations.Add(animation);
-            return _animations.Count - 1;
+            return animationID;
         }
 
         /// <summary>
@@ -68,7 +69,6 @@ namespace MonoGameTest2
         /// <param name="index">The index of the sequence.</param>
         public void SetAnimation(int index)
         {
-            CurrentAnimation = index;
             Animation animation = _animations[index];
 
             if (!_activeAnimations.Contains(animation))
@@ -77,6 +77,8 @@ namespace MonoGameTest2
             }
 
             animation.Start();
+
+            CurrentAnimation = _activeAnimations.Max();
         }
 
         /// <summary>
@@ -93,18 +95,22 @@ namespace MonoGameTest2
             }
 
             animation.Stop();
+
+            CurrentAnimation = _activeAnimations.Max();
         }
 
         // Computes the frame index of the highest priority active sequence
         public void Update()
         {
-            Animation topSequence = _activeAnimations.Max();
 
-            _currentFrame = topSequence.Update();
+            _currentFrame = CurrentAnimation.Update();
             if (_currentFrame == -1)
             {
-                _activeAnimations.Remove(topSequence);
+                _activeAnimations.Remove(CurrentAnimation);
+                CurrentAnimation = _activeAnimations.Max();
             }
+
+
         }
 
 
@@ -126,6 +132,7 @@ namespace MonoGameTest2
     public class Animation : IComparable<Animation>
     {
         public bool IsActive;
+        public int ID;
 
         private bool _hasBeenUpdated;
         private double _animStartTime;
@@ -136,13 +143,26 @@ namespace MonoGameTest2
         private readonly bool _loop;
         private readonly double _millisecondsPerFrame;
 
-        public Animation(int startFrame, int numFrames, int framerate, int priority, bool loop = true)
+        public Animation(int startFrame, int numFrames, int framerate, int priority, int ID, bool loop)
         {
+            this.ID = ID;
             _startFrame = startFrame;
             _numFrames = numFrames;
             _millisecondsPerFrame = 1000.0d / framerate;
             _priority = priority;
             _loop = loop;
+        }
+
+        public override string ToString()
+        {
+            return  "Animation(" +
+                $"ID {ID}, " +
+                $"Started at {_animStartTime}, " +
+                $"{_numFrames} Frames, " +
+                $"{1000.0d/_millisecondsPerFrame} FPS, " +
+                (_loop ? "Looped, " : "Unlooped, ") +
+                (IsActive ? "Active" : "Inactive") + 
+                ")";
         }
 
         public int CompareTo(Animation that)
@@ -164,7 +184,7 @@ namespace MonoGameTest2
         // Returns the index of the frame to be drawn
         public int Update()
         {
-            double callTime = GameManager.Instance.GameTime.TotalGameTime.Milliseconds;
+            double callTime = GameManager.Instance.CurrentTimeMS;
             if (!_hasBeenUpdated)
             {
                 _hasBeenUpdated = true;

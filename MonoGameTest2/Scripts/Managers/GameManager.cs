@@ -15,6 +15,7 @@ namespace MonoGameTest2.Managers
 
         public GameTime GameTime;
         public float DeltaTime;
+        public double CurrentTimeMS;
         public Player Player;
         public KeyboardState PreviousKeyboardState;
 
@@ -39,6 +40,7 @@ namespace MonoGameTest2.Managers
 
             GameTime = gameTime;
             DeltaTime = (float)gameTime.ElapsedGameTime.TotalSeconds;
+            CurrentTimeMS = gameTime.TotalGameTime.TotalMilliseconds;
 
             Player.HandleInput();
             Player.Update();
