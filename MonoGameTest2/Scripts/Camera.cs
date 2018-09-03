@@ -8,9 +8,12 @@ namespace MonoGameTest2
         public bool Active { get; set; }
         public Matrix TranslationMatrix { get; private set; }
         public Rectangle Viewport { get; private set; }
-        public Rectangle? CameraBounds { get; private set; }
+        public Rectangle? CameraBounds { get; set; }
 
         private Vector2 _position;
+        private float _rotation;
+        private float _zoom;
+
         public Vector2 Position {
             get
             {
@@ -22,7 +25,6 @@ namespace MonoGameTest2
             }
         }
 
-        private float _rotation;
 
         /// <summary>
         /// The angle of the camera in degrees.
@@ -39,7 +41,6 @@ namespace MonoGameTest2
             }
         }
 
-        private float _zoom;
         public float Zoom
         {
             get
@@ -63,6 +64,11 @@ namespace MonoGameTest2
             CalculateViewport();
         }
 
+        public Vector2 WorldToScreen(Vector2 point)
+        {
+            return Vector2.Transform(point, TranslationMatrix);
+        }
+
         private void CalculateViewport()
         {
             TranslationMatrix = Matrix.CreateTranslation(-Position.X, -Position.Y, 0) *
@@ -71,7 +77,7 @@ namespace MonoGameTest2
                 Matrix.CreateTranslation(Viewport.Width / 2, Viewport.Height / 2, 0);
         }
 
-        public void Move(Vector2 position)
+        private void Move(Vector2 position)
         {
             if (!Active) return;
 
@@ -104,11 +110,7 @@ namespace MonoGameTest2
             CalculateViewport();
         }
 
-        /// <summary>
-        /// Set the rotation of the camera.
-        /// </summary>
-        /// <param name="angle">The angle in degrees.</param>
-        public void Rotate(float angle)
+        private void Rotate(float angle)
         {
             if (!Active) return;
 
@@ -116,7 +118,7 @@ namespace MonoGameTest2
             CalculateViewport();
         }
 
-        public void SetZoom(float zoom)
+        private void SetZoom(float zoom)
         {
             if (!Active) return;
 

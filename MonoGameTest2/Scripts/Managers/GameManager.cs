@@ -4,6 +4,7 @@ using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 
+using MonoGameTest2.Controllers;
 using MonoGameTest2.Entites;
 using MonoGameTest2.Helpers;
 
@@ -16,6 +17,7 @@ namespace MonoGameTest2.Managers
 
         public Game Game;
         public LevelManager LevelManager;
+        public CameraController CameraController; 
         public Camera Camera;
         public Player Player;
 
@@ -26,10 +28,27 @@ namespace MonoGameTest2.Managers
 
         private SpriteFont _font;
         private bool _showDebugInfo = false;
+        private Vector2 _playerSpawn;
 
         public void Initialize(Game game)
         {
             Game = game;
+
+            var screenWidth = Game.GraphicsDevice.Viewport.Width;
+            var screenHeight = Game.GraphicsDevice.Viewport.Height;
+
+            _playerSpawn = new Vector2
+            {
+                X = screenWidth / 2,
+                Y = screenHeight / 2
+            };
+
+            LevelManager = new LevelManager();
+            LevelManager.BuildLevel();
+            Camera = new Camera(new Rectangle(0, 0, screenWidth, screenHeight), _playerSpawn, new Rectangle(0, 0, LevelManager.ActualWidth, LevelManager.ActualHeight));
+
+            CameraController = new CameraController();
+            CameraController.SetDeadzoneDimensions(96, 96);
         }
 
         public void LoadContent(ContentManager contentManager)
@@ -37,24 +56,11 @@ namespace MonoGameTest2.Managers
             var avatar = contentManager.Load<Texture2D>("images/SmileyWalk");
             _font = contentManager.Load<SpriteFont>("default_font");
 
-
-            var screenWidth = Game.GraphicsDevice.Viewport.Width;
-            var screenHeight = Game.GraphicsDevice.Viewport.Height;
-
-            var playerSpawn = new Vector2
-            {
-                X = screenWidth / 2,
-                Y = screenHeight / 2
-            };
-
-            Player = new Player(avatar, playerSpawn);
+            Player = new Player(avatar, _playerSpawn);
             Player.LoadContent(contentManager);
-
-            LevelManager = new LevelManager();
             LevelManager.LoadContent(contentManager);
-            LevelManager.BuildLevel();
 
-            Camera = new Camera(new Rectangle(0, 0, screenWidth, screenHeight), new Vector2(screenWidth/2, screenHeight/2), new Rectangle(0, 0, LevelManager.ActualWidth, LevelManager.ActualHeight));
+            CameraController.Target = Player;
         }
 
         public void Update(GameTime gameTime)
@@ -71,7 +77,7 @@ namespace MonoGameTest2.Managers
             Player.HandleInput();
             Player.Update();
 
-            Camera.Move(Player.Position);
+            CameraController.Update();
 
             PreviousKeyboardState = Keyboard.GetState();
         }
@@ -85,7 +91,7 @@ namespace MonoGameTest2.Managers
                             $"FPS: {fps}\n" +
                             $"Player Position: {Player.Position}\n" +
                             $"Player Animation: {Player._activeAnimations.Max.ToString()}\n" +
-                            $"Camera Viewport: {Camera.Viewport}\n";
+                            $"Camera Viewport: {CameraController._deadzone}\n";
 
             // Draw game
             spriteBatch.Begin(transformMatrix: Camera.TranslationMatrix);
