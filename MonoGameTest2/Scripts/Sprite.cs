@@ -33,7 +33,7 @@ namespace MonoGameTest2
 
         public void Draw(SpriteBatch spriteBatch)
         {
-            spriteBatch.Draw(Texture, Position, Color.White);
+            spriteBatch.Draw(Texture, Position - new Vector2(Width/2, Height/2), Color.White);
         }
     }
 }

@@ -119,7 +119,7 @@ namespace MonoGameTest2
             int column = _currentFrame % Columns;
 
             Rectangle sourceRectangle = new Rectangle(Width * column, Height * row, Width, Height);
-            Rectangle destinationRectangle = new Rectangle((int)Position.X, (int)Position.Y, Width, Height);
+            Rectangle destinationRectangle = new Rectangle((int)Position.X - Width/2, (int)Position.Y - Height/2, Width, Height);
 
             spriteBatch.Draw(Texture, destinationRectangle, sourceRectangle, Color.White);
         }
