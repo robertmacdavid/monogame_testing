@@ -1,4 +1,5 @@
-﻿using Microsoft.Xna.Framework;
+﻿using System;
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
@@ -12,6 +13,8 @@ namespace MonoGameTest2.Managers
     {
         private static GameManager _instance;
         public static GameManager Instance { get { return _instance ?? (_instance = new GameManager()); } }
+
+        public LevelManager LevelManager;
 
         public GameTime GameTime;
         public float DeltaTime;
@@ -29,6 +32,10 @@ namespace MonoGameTest2.Managers
 
             Player = new Player(avatar, new Vector2(0, 0));
             Player.LoadContent(contentManager);
+
+            LevelManager = new LevelManager();
+            LevelManager.LoadContent(contentManager);
+            LevelManager.BuildLevel();
         }
 
         public void Update(GameTime gameTime)
@@ -50,18 +57,23 @@ namespace MonoGameTest2.Managers
 
         public void Draw(SpriteBatch spriteBatch)
         {
+            var fps = Math.Round(1 / DeltaTime);
+
             // TODO: Put this string somewhere else, like content.
             var debugInfo = "Debug Info\n" +
+                            $"FPS: {fps}\n" +
                             $"Delta Time: {DeltaTime}\n" +
                             $"Player Position: {Player.Position}\n" +
-                            $"Player Animation: {Player._activeAnimations}\n";
+                            $"Player Animation: {Player._activeAnimations.Max.ToString()}\n";
 
             spriteBatch.Begin();
+
+            LevelManager.Draw(spriteBatch);
             Player.Draw(spriteBatch);
 
             if (_showDebugInfo)
             {
-                spriteBatch.DrawString(_font, debugInfo, new Vector2(0, 0), Color.White);
+                spriteBatch.DrawString(_font, debugInfo, new Vector2(0, 0), Color.Red);
             }
 
             spriteBatch.End();

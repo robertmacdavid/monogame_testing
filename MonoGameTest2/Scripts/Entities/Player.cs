@@ -23,8 +23,8 @@ namespace MonoGameTest2.Entites
 
         public void LoadContent(ContentManager contentManager)
         {
-            _standAnimID = AddAnimation(0, 4, 4, 0);
-            _walkAnimID = AddAnimation(0, 16, 32, 1);
+            _standAnimID = AddAnimation("stand", 0, 4, 4, 0);
+            _walkAnimID = AddAnimation("walk", 0, 16, 32, 1);
 
             SetAnimation(_standAnimID);
         }

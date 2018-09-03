@@ -14,24 +14,6 @@ namespace MonoGameTest2
     {
         GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
-        private Texture2D venus;
-        private Texture2D earth;
-        private Texture2D mars;
-        private Texture2D avatar;
-        private Texture2D red, green, blue;
-        private SpriteFont font;
-        private int score = 0;
-        private float earthAngle = 0.0f;
-
-        private float blueAngle = 0;
-        private float greenAngle = 0;
-        private float redAngle = 0;
-
-        private float blueSpeed = 0.025f;
-        private float greenSpeed = 0.017f;
-        private float redSpeed = 0.022f;
-
-        private float distance = 100;
 
         public Game1()
         {
@@ -63,18 +45,8 @@ namespace MonoGameTest2
             // Create a new SpriteBatch, which can be used to draw textures.
             spriteBatch = new SpriteBatch(GraphicsDevice);
 
-            venus = Content.Load<Texture2D>("images/venus");
-            earth = Content.Load<Texture2D>("images/earth");
-            mars = Content.Load<Texture2D>("images/mars");
-            font = Content.Load<SpriteFont>("default_font");
-            avatar = Content.Load<Texture2D>("images/SmileyWalk");
-
             // unload everything that has been loaded to the CM "Content"
             // this.Content.Unload()
-
-            red = Content.Load<Texture2D>("images/red");
-            green = Content.Load<Texture2D>("images/green");
-            blue = Content.Load<Texture2D>("images/blue");
 
             GameManager.Instance.LoadContent(Content);
         }
@@ -98,13 +70,6 @@ namespace MonoGameTest2
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
                 Exit();
 
-            score++;
-            earthAngle += 0.01f;
-
-            blueAngle += blueSpeed;
-            greenAngle += greenSpeed;
-            redAngle += redSpeed;
-
             GameManager.Instance.Update(gameTime);
 
             base.Update(gameTime);
@@ -117,43 +82,6 @@ namespace MonoGameTest2
         protected override void Draw(GameTime gameTime)
         {
             GraphicsDevice.Clear(Color.Black);
-
-
-            this.spriteBatch.Begin();
-
-            //this.spriteBatch.Draw(background, new Rectangle(0, 0, 800, 480), Color.Black);
-
-            spriteBatch.Draw(venus, new Vector2(400, 240), Color.White);
-            //spriteBatch.Draw(earth, new Vector2(450, 240), Color.White);
-            spriteBatch.DrawString(font, "Score: " + score, new Vector2(100, 100), Color.White);
-
-            Vector2 location = new Vector2(400, 240);
-            Rectangle sourceRectangle = new Rectangle(0, 0, earth.Width, earth.Height);
-            Vector2 origin = new Vector2(earth.Width/2, earth.Height/2);
-
-            spriteBatch.Draw(earth, location, sourceRectangle, Color.White, 
-                             earthAngle, origin, 1.0f, SpriteEffects.None, 1);
-
-
-            this.spriteBatch.End();
-
-            Vector2 bluePosition = new Vector2(
-                (float)Math.Cos(blueAngle) * distance,
-                (float)Math.Sin(blueAngle) * distance);
-            Vector2 greenPosition = new Vector2(
-                            (float)Math.Cos(greenAngle) * distance,
-                            (float)Math.Sin(greenAngle) * distance);
-            Vector2 redPosition = new Vector2(
-                            (float)Math.Cos(redAngle) * distance,
-                            (float)Math.Sin(redAngle) * distance);
-
-            Vector2 center = new Vector2(300, 140);
-
-            spriteBatch.Begin(SpriteSortMode.Immediate, BlendState.Additive);
-            spriteBatch.Draw(blue, center + bluePosition, Color.White);
-            spriteBatch.Draw(green, center + greenPosition, Color.White);
-            spriteBatch.Draw(red, center + redPosition, Color.White);
-            spriteBatch.End();
 
             GameManager.Instance.Draw(spriteBatch);
 

@@ -64,6 +64,7 @@
   <ItemGroup>
     <Compile Include="Scripts\Controllers\IInputController.cs" />
     <Compile Include="Scripts\Entities\Character.cs" />
+    <Compile Include="Scripts\Helpers\ContentHelper.cs" />
     <Compile Include="Scripts\Helpers\KeyboardHelper.cs" />
     <Compile Include="Scripts\Managers\GameManager.cs" />
     <Compile Include="Program.cs" />
@@ -71,6 +72,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Scripts\AnimatedSprite.cs" />
     <Compile Include="Scripts\Entities\Player.cs" />
+    <Compile Include="Scripts\Managers\LevelManager.cs" />
     <Compile Include="Scripts\Sprite.cs" />
   </ItemGroup>
   <ItemGroup>

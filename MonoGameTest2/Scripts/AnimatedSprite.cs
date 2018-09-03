@@ -55,10 +55,10 @@ namespace MonoGameTest2
         /// <param name="framerate"></param>
         /// <param name="priority"></param>
         /// <returns>An ID for this animation.</returns>
-        public int AddAnimation(int startFrame, int numFrames, int framerate, int priority, bool loop=true)
+        public int AddAnimation(string name, int startFrame, int numFrames, int framerate, int priority, bool loop=true)
         {
             int animationID = _animations.Count;
-            var animation = new Animation(startFrame, numFrames, framerate, priority, animationID, loop);
+            var animation = new Animation(name, startFrame, numFrames, framerate, priority, animationID, loop);
             _animations.Add(animation);
             return animationID;
         }
@@ -131,8 +131,9 @@ namespace MonoGameTest2
     /// </summary>
     public class Animation : IComparable<Animation>
     {
-        public bool IsActive;
-        public int ID;
+        public string Name { get; set; }
+        public bool IsActive { get; private set; }
+        public int ID { get; private set; }
 
         private bool _hasBeenUpdated;
         private double _animStartTime;
@@ -143,9 +144,11 @@ namespace MonoGameTest2
         private readonly bool _loop;
         private readonly double _millisecondsPerFrame;
 
-        public Animation(int startFrame, int numFrames, int framerate, int priority, int ID, bool loop)
+        public Animation(string name, int startFrame, int numFrames, int framerate, int priority, int id, bool loop)
         {
-            this.ID = ID;
+            ID = id;
+            Name = name;
+
             _startFrame = startFrame;
             _numFrames = numFrames;
             _millisecondsPerFrame = 1000.0d / framerate;
@@ -156,8 +159,9 @@ namespace MonoGameTest2
         public override string ToString()
         {
             return  "Animation(" +
-                $"ID {ID}, " +
-                $"Started at {_animStartTime}, " +
+                $"Name: {Name}, " +
+                $"ID: {ID}, " +
+                $"Started at: {_animStartTime}, " +
                 $"{_numFrames} Frames, " +
                 $"{1000.0d/_millisecondsPerFrame} FPS, " +
                 (_loop ? "Looped, " : "Unlooped, ") +
