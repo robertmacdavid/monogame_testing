@@ -1,7 +1,6 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
-using System;
 
 using MonoGameTest2.Managers;
 
@@ -12,12 +11,12 @@ namespace MonoGameTest2
     /// </summary>
     public class Game1 : Game
     {
-        GraphicsDeviceManager graphics;
-        SpriteBatch spriteBatch;
+        GraphicsDeviceManager Graphics;
+        SpriteBatch SpriteBatch;
 
         public Game1()
         {
-            graphics = new GraphicsDeviceManager(this);
+            Graphics = new GraphicsDeviceManager(this);
             Content.RootDirectory = "Content";
             // Content is of type "ContentManager". We should make multiple
             // since unloading content is done at the granularity of CMs
@@ -33,6 +32,8 @@ namespace MonoGameTest2
         {
             Window.Title = "Yeah Bitch.";
 
+            GameManager.Instance.Initialize(this);
+
             base.Initialize();
         }
 
@@ -43,11 +44,7 @@ namespace MonoGameTest2
         protected override void LoadContent()
         {
             // Create a new SpriteBatch, which can be used to draw textures.
-            spriteBatch = new SpriteBatch(GraphicsDevice);
-
-            // unload everything that has been loaded to the CM "Content"
-            // this.Content.Unload()
-
+            SpriteBatch = new SpriteBatch(GraphicsDevice);
             GameManager.Instance.LoadContent(Content);
         }
 
@@ -83,7 +80,7 @@ namespace MonoGameTest2
         {
             GraphicsDevice.Clear(Color.Black);
 
-            GameManager.Instance.Draw(spriteBatch);
+            GameManager.Instance.Draw(SpriteBatch);
 
             base.Draw(gameTime);
         }

@@ -14,28 +14,47 @@ namespace MonoGameTest2.Managers
         private static GameManager _instance;
         public static GameManager Instance { get { return _instance ?? (_instance = new GameManager()); } }
 
+        public Game Game;
         public LevelManager LevelManager;
+        public Camera Camera;
+        public Player Player;
 
         public GameTime GameTime;
         public float DeltaTime;
         public double CurrentTimeMS;
-        public Player Player;
         public KeyboardState PreviousKeyboardState;
 
         private SpriteFont _font;
         private bool _showDebugInfo = false;
+
+        public void Initialize(Game game)
+        {
+            Game = game;
+        }
 
         public void LoadContent(ContentManager contentManager)
         {
             var avatar = contentManager.Load<Texture2D>("images/SmileyWalk");
             _font = contentManager.Load<SpriteFont>("default_font");
 
-            Player = new Player(avatar, new Vector2(0, 0));
+
+            var screenWidth = Game.GraphicsDevice.Viewport.Width;
+            var screenHeight = Game.GraphicsDevice.Viewport.Height;
+
+            var playerSpawn = new Vector2
+            {
+                X = screenWidth / 2,
+                Y = screenHeight / 2
+            };
+
+            Player = new Player(avatar, playerSpawn);
             Player.LoadContent(contentManager);
 
             LevelManager = new LevelManager();
             LevelManager.LoadContent(contentManager);
             LevelManager.BuildLevel();
+
+            Camera = new Camera(screenWidth, screenHeight);
         }
 
         public void Update(GameTime gameTime)
@@ -52,6 +71,8 @@ namespace MonoGameTest2.Managers
             Player.HandleInput();
             Player.Update();
 
+            Camera.Move(Player.Position);
+
             PreviousKeyboardState = Keyboard.GetState();
         }
 
@@ -66,17 +87,22 @@ namespace MonoGameTest2.Managers
                             $"Player Position: {Player.Position}\n" +
                             $"Player Animation: {Player._activeAnimations.Max.ToString()}\n";
 
-            spriteBatch.Begin();
-
+            // Draw game
+            spriteBatch.Begin(transformMatrix: Camera.TranslationMatrix);
             LevelManager.Draw(spriteBatch);
             Player.Draw(spriteBatch);
+            spriteBatch.End();
 
+            // Draw UI
+
+            // Draw debug info
             if (_showDebugInfo)
             {
+                spriteBatch.Begin();
                 spriteBatch.DrawString(_font, debugInfo, new Vector2(0, 0), Color.Red);
+                spriteBatch.End();
             }
 
-            spriteBatch.End();
         }
     }
 }

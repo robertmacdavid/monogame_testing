@@ -62,6 +62,7 @@
     <OutputPath>bin\Debug\</OutputPath>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="Scripts\Camera.cs" />
     <Compile Include="Scripts\Controllers\IInputController.cs" />
     <Compile Include="Scripts\Entities\Character.cs" />
     <Compile Include="Scripts\Helpers\ContentHelper.cs" />
