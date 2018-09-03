@@ -11,6 +11,11 @@ namespace MonoGameTest2.Managers
         public int Width { get; private set; }
         public int Height { get; private set; }
 
+        public Vector2 TileSize { get; private set; }
+
+        public int ActualWidth { get { return (int)TileSize.X * Width; } }
+        public int ActualHeight { get { return (int)TileSize.Y * Height; } }
+
         private Texture2D[] _tileTextures;
         private int[,] _tiles;
 
@@ -21,8 +26,9 @@ namespace MonoGameTest2.Managers
 
         public void BuildLevel()
         {
-            Width = 25;
-            Height = 15;
+            TileSize = new Vector2(32, 32);
+            Width = 30;
+            Height = 20;
             _tiles = new int[Width, Height];
             
             for (var y = 0; y < Height; y++)

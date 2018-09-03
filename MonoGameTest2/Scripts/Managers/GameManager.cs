@@ -54,7 +54,7 @@ namespace MonoGameTest2.Managers
             LevelManager.LoadContent(contentManager);
             LevelManager.BuildLevel();
 
-            Camera = new Camera(screenWidth, screenHeight);
+            Camera = new Camera(new Rectangle(0, 0, screenWidth, screenHeight), new Vector2(screenWidth/2, screenHeight/2), new Rectangle(0, 0, LevelManager.ActualWidth, LevelManager.ActualHeight));
         }
 
         public void Update(GameTime gameTime)
@@ -83,9 +83,9 @@ namespace MonoGameTest2.Managers
             // TODO: Put this string somewhere else, like content.
             var debugInfo = "Debug Info\n" +
                             $"FPS: {fps}\n" +
-                            $"Delta Time: {DeltaTime}\n" +
                             $"Player Position: {Player.Position}\n" +
-                            $"Player Animation: {Player._activeAnimations.Max.ToString()}\n";
+                            $"Player Animation: {Player._activeAnimations.Max.ToString()}\n" +
+                            $"Camera Viewport: {Camera.Viewport}\n";
 
             // Draw game
             spriteBatch.Begin(transformMatrix: Camera.TranslationMatrix);

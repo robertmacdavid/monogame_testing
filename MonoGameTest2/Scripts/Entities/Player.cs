@@ -18,7 +18,7 @@ namespace MonoGameTest2.Entites
 
         public Player(Texture2D texture, Vector2 spawnPosition) : base(texture, spawnPosition, 4, 4)
         {
-            Speed = 100;
+            Speed = 500;
         }
 
         public void LoadContent(ContentManager contentManager)
