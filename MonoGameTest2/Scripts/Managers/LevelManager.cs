@@ -6,7 +6,7 @@ using MonoGameTest2.Helpers;
 
 namespace MonoGameTest2.Managers
 {
-    class LevelManager
+    public class LevelManager
     {
         public int Width { get; private set; }
         public int Height { get; private set; }

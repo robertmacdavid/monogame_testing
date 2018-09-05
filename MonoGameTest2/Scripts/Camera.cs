@@ -3,7 +3,7 @@ using Microsoft.Xna.Framework.Content;
 
 namespace MonoGameTest2
 {
-    class Camera
+    public class Camera
     {
         public bool Active { get; set; }
         public Matrix TranslationMatrix { get; private set; }
@@ -15,42 +15,23 @@ namespace MonoGameTest2
         private float _zoom;
 
         public Vector2 Position {
-            get
-            {
-                return _position;
-            }
-            set
-            {
-                Move(value);
-            }
+            get { return _position; }
+            set { Move(value); }
         }
-
 
         /// <summary>
         /// The angle of the camera in degrees.
         /// </summary>
         public float Rotation
         {
-            get
-            {
-                return _rotation;
-            }
-            set
-            {
-                Rotate(value);
-            }
+            get { return _rotation; }
+            set { Rotate(value); }
         }
 
         public float Zoom
         {
-            get
-            {
-                return _zoom;
-            }
-            set
-            {
-                SetZoom(value);
-            }
+            get { return _zoom; }
+            set { SetZoom(value); }
         }
 
         public Camera(Rectangle viewport, Vector2 position, Rectangle? cameraBounds = null)
@@ -59,6 +40,16 @@ namespace MonoGameTest2
             Viewport = viewport;
             CameraBounds = cameraBounds;
             _position = position;
+            _zoom = 1;
+
+            CalculateViewport();
+        }
+
+        public void Reset()
+        {
+            Active = true;
+            CameraBounds = null;
+            _position = Vector2.Zero;
             _zoom = 1;
 
             CalculateViewport();

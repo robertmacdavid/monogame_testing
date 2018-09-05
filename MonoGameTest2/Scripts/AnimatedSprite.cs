@@ -98,7 +98,9 @@ namespace MonoGameTest2
             CurrentAnimation = _activeAnimations.Max();
         }
 
-        // Computes the frame index of the highest priority active sequence
+        /// <summary>
+        /// Computes the frame index of the highest priority active sequence.
+        /// </summary>
         public void Update()
         {
 
@@ -112,7 +114,10 @@ namespace MonoGameTest2
 
         }
 
-
+        /// <summary>
+        /// Draws the animated sprite on it's current frame of animation.
+        /// </summary>
+        /// <param name="spriteBatch">The sprite batch used to render this sprite.</param>
         public new void Draw(SpriteBatch spriteBatch)
         {
             int row = (int)((float)_currentFrame / (float)Columns);
@@ -184,7 +189,10 @@ namespace MonoGameTest2
             _hasBeenUpdated = false;
         }
 
-        // Returns the index of the frame to be drawn
+        /// <summary>
+        /// Updates the animation to go to the next frame.
+        /// </summary>
+        /// <returns>The index of the frame to be drawn.</returns>
         public int Update()
         {
             double callTime = GameManager.Instance.CurrentTimeMS;

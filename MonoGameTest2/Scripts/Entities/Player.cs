@@ -8,7 +8,7 @@ using MonoGameTest2.Entities;
 
 namespace MonoGameTest2.Entites
 {
-    class Player : Character, IInputController
+    public class Player : Character, IInputController
     {
         private int _standAnimID;
         private int _walkAnimID;

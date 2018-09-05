@@ -3,7 +3,7 @@ using Microsoft.Xna.Framework.Graphics;
 
 namespace MonoGameTest2.Entities
 {
-    class Character : AnimatedSprite
+    public class Character : AnimatedSprite
     {
         public float Speed;
 

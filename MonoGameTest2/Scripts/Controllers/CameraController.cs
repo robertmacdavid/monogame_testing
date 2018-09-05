@@ -5,7 +5,7 @@ using MonoGameTest2.Managers;
 
 namespace MonoGameTest2.Controllers
 {
-    class CameraController
+    public class CameraController
     {
         public Sprite Target { get; set; }
         public bool FollowExactly { get; set; }
@@ -22,7 +22,7 @@ namespace MonoGameTest2.Controllers
 
         public void Update()
         {
-            var camera = GameManager.Instance.Camera;
+            var camera = GameManager.Instance.MainCamera;
 
             if (Target != null)
             {
