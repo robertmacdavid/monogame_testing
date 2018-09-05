@@ -4,7 +4,7 @@ using Microsoft.Xna.Framework.Design;
 
 using MonoGameTest2.Managers;
 
-namespace MonoGameTest2
+namespace MonoGameTest2.Entities
 {
     public class Sprite
     {

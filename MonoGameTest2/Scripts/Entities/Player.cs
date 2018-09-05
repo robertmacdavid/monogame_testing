@@ -6,7 +6,7 @@ using Microsoft.Xna.Framework.Input;
 using MonoGameTest2.Controllers;
 using MonoGameTest2.Entities;
 
-namespace MonoGameTest2.Entites
+namespace MonoGameTest2.Entities
 {
     public class Player : Character, IInputController
     {

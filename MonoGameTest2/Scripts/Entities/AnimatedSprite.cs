@@ -6,7 +6,7 @@ using Microsoft.Xna.Framework;
 
 using MonoGameTest2.Managers;
 
-namespace MonoGameTest2
+namespace MonoGameTest2.Entities
 {
     /// <summary>
     /// A sprite with a sprite sheet texture used for animation.

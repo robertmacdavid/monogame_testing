@@ -1,6 +1,6 @@
 ﻿namespace MonoGameTest2.Controllers
 {
-    interface IInputController
+    public interface IInputController
     {
         void HandleInput();
     }

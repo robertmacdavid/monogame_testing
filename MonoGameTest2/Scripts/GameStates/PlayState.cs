@@ -2,7 +2,8 @@
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
-using MonoGameTest2.Entites;
+
+using MonoGameTest2.Entities;
 using MonoGameTest2.Managers;
 
 namespace MonoGameTest2.GameStates

@@ -6,7 +6,7 @@ using MonoGameTest2.Managers;
 
 namespace MonoGameTest2.Helpers
 {
-    static class ContentHelper
+    public static class ContentHelper
     {
         public static T[] LoadAll<T>(this ContentManager contentManager, string folder)
         {

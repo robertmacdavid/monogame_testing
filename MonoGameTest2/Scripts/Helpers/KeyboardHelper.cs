@@ -4,7 +4,7 @@ using MonoGameTest2.Managers;
 
 namespace MonoGameTest2.Helpers
 {
-    static class KeyboardHelper
+    public static class KeyboardHelper
     {
         public static bool GetKeyDown(Keys key)
         {
