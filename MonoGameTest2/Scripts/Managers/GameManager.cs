@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Text;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
@@ -31,10 +32,12 @@ namespace MonoGameTest2.Managers
 
         public SpriteFont DefaultFont;
         public bool ShowDebugInfo = false;
+        private StringBuilder _debugInfo;
 
         public GameManager()
         {
             GameStateManager = new GameStateManager();
+            _debugInfo = new StringBuilder();
         }
 
         public void Initialize(Game game)
@@ -73,6 +76,22 @@ namespace MonoGameTest2.Managers
                 ShowDebugInfo = !ShowDebugInfo;
             }
 
+            if (KeyboardHelper.GetKeyUp(Keys.F2))
+            {
+                if (!(GameStateManager.CurrentState is PlayState))
+                {
+                    GameStateManager.RemoveState();
+                }
+            }
+
+            if (KeyboardHelper.GetKeyUp(Keys.F3))
+            {
+                if (!(GameStateManager.CurrentState is EditorState))
+                {
+                    GameStateManager.AddState(new EditorState());
+                }
+            }
+
             GameStateManager.Update();
             CameraController.Update();
 
@@ -83,12 +102,40 @@ namespace MonoGameTest2.Managers
         {
             SpriteBatch = spriteBatch;
 
+            var fps = Math.Round(1 / DeltaTime);
+
+            if (ShowDebugInfo)
+            {
+                _debugInfo.Clear();
+                _debugInfo.AppendLine("Debug Info");
+                _debugInfo.AppendLine($"Game State: {GameStateManager.CurrentState.Name}");
+                _debugInfo.AppendLine($"FPS: {fps}");
+            }
+
             GameStateManager.Draw();
+
+            // Draw debug info
+            if (ShowDebugInfo)
+            {
+                spriteBatch.Begin();
+                spriteBatch.DrawString(DefaultFont, _debugInfo, new Vector2(0, 0), Color.Blue);
+                spriteBatch.End();
+            }
         }
 
         public void UnloadContent()
         {
             ContentManager.Unload();
+        }
+
+        public void AppendDebug(string info)
+        {
+            if (!ShowDebugInfo)
+            {
+                return;
+            }
+
+            _debugInfo.AppendLine(info);
         }
     }
 }

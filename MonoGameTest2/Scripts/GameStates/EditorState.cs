@@ -1,34 +1,39 @@
-﻿using System;
-using Microsoft.Xna.Framework.Content;
-using Microsoft.Xna.Framework.Graphics;
+﻿using Microsoft.Xna.Framework.Input;
+
 
 namespace MonoGameTest2.GameStates
 {
     public class EditorState : GameState
     {
+        public override string Name => "Editor State";
+
         public override void Initialize()
         {
-            throw new NotImplementedException();
+            GameManager.Game.IsMouseVisible = true;
         }
 
         public override void LoadContent()
         {
-            throw new NotImplementedException();
+            
         }
 
         public override void Update()
         {
-            throw new NotImplementedException();
+
         }
 
         public override void Draw()
         {
-            throw new NotImplementedException();
+            var spriteBatch = GameManager.SpriteBatch;
+
+            spriteBatch.Begin(transformMatrix: GameManager.MainCamera.TranslationMatrix);
+            GameManager.LevelManager.Draw(spriteBatch);
+            spriteBatch.End();
         }
 
         public override void UnloadContent()
         {
-            throw new NotImplementedException();
+            GameManager.Game.IsMouseVisible = false;
         }
     }
 }

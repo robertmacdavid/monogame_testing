@@ -7,6 +7,7 @@ namespace MonoGameTest2.GameStates
 {
     public abstract class GameState
     {
+        public abstract string Name { get; }
         protected GameManager GameManager => GameManager.Instance;
 
         public abstract void Initialize();

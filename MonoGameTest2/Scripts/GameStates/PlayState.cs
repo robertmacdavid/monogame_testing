@@ -2,6 +2,7 @@
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
+using Microsoft.Xna.Framework.Input;
 
 using MonoGameTest2.Entities;
 using MonoGameTest2.Managers;
@@ -13,8 +14,12 @@ namespace MonoGameTest2.GameStates
         public Player Player;
         private Vector2 _playerSpawn;
 
+        public override string Name => "Play State";
+
         public override void Initialize()
         {
+            GameManager.Game.IsMouseVisible = false;
+
             var screenWidth = GameManager.Game.GraphicsDevice.Viewport.Width;
             var screenHeight = GameManager.Game.GraphicsDevice.Viewport.Height;
 
@@ -45,27 +50,18 @@ namespace MonoGameTest2.GameStates
         public override void Draw()
         {
             var spriteBatch = GameManager.SpriteBatch;
-            var fps = Math.Round(1 / GameManager.DeltaTime);
 
-            // TODO: Put this string somewhere else, like content.
-            var debugInfo = "Debug Info\n" +
-                            $"FPS: {fps}\n" +
-                            $"Player Position: {Player.Position}\n";
+            GameManager.AppendDebug($"Player Position: {Player.Position}");
 
             spriteBatch.Begin(transformMatrix: GameManager.MainCamera.TranslationMatrix);
             GameManager.LevelManager.Draw(spriteBatch);
             Player.Draw(spriteBatch);
             spriteBatch.End();
-
-            // Draw debug info
-            if (GameManager.ShowDebugInfo)
-            {
-                spriteBatch.Begin();
-                spriteBatch.DrawString(GameManager.DefaultFont, debugInfo, new Vector2(0, 0), Color.Red);
-                spriteBatch.End();
-            }
         }
 
-        public override void UnloadContent() { }
+        public override void UnloadContent()
+        {
+            GameManager.ContentManager.Unload();
+        }
     }
 }
