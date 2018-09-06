@@ -16,7 +16,10 @@ namespace MonoGameTest2.Managers
         public static GameManager Instance { get { return _instance ?? (_instance = new GameManager()); } }
 
         public Game Game;
-        public Stack<GameState> GameStates;
+        public ContentManager ContentManager;
+        public SpriteBatch SpriteBatch;
+
+        public GameStateManager GameStateManager;
         public LevelManager LevelManager;
         public CameraController CameraController; 
         public Camera MainCamera;
@@ -31,7 +34,7 @@ namespace MonoGameTest2.Managers
 
         public GameManager()
         {
-            GameStates = new Stack<GameState>();
+            GameStateManager = new GameStateManager();
         }
 
         public void Initialize(Game game)
@@ -47,33 +50,30 @@ namespace MonoGameTest2.Managers
 
             CameraController = new CameraController();
             CameraController.SetDeadzoneDimensions(96, 96);
-
-            GameStates.Push(new PlayState());
-            GameStates.Peek().Initialize();
         }
 
         public void LoadContent(ContentManager contentManager)
         {
+            ContentManager = contentManager;
             DefaultFont = contentManager.Load<SpriteFont>("default_font");
 
             LevelManager.LoadContent(contentManager);
 
-            GameStates.Peek().LoadContent(contentManager);
+            GameStateManager.AddState(new PlayState());
         }
 
         public void Update(GameTime gameTime)
         {
+            GameTime = gameTime;
+            DeltaTime = (float)gameTime.ElapsedGameTime.TotalSeconds;
+            CurrentTimeMS = gameTime.TotalGameTime.TotalMilliseconds;
+
             if (KeyboardHelper.GetKeyUp(Keys.F1))
             {
                 ShowDebugInfo = !ShowDebugInfo;
             }
 
-            GameTime = gameTime;
-            DeltaTime = (float)gameTime.ElapsedGameTime.TotalSeconds;
-            CurrentTimeMS = gameTime.TotalGameTime.TotalMilliseconds;
-
-            GameStates.Peek().Update();
-
+            GameStateManager.Update();
             CameraController.Update();
 
             PreviousKeyboardState = Keyboard.GetState();
@@ -81,7 +81,14 @@ namespace MonoGameTest2.Managers
 
         public void Draw(SpriteBatch spriteBatch)
         {
-            GameStates.Peek().Draw(spriteBatch);
+            SpriteBatch = spriteBatch;
+
+            GameStateManager.Draw();
+        }
+
+        public void UnloadContent()
+        {
+            ContentManager.Unload();
         }
     }
 }

@@ -10,8 +10,9 @@ namespace MonoGameTest2.GameStates
         protected GameManager GameManager => GameManager.Instance;
 
         public abstract void Initialize();
-        public abstract void LoadContent(ContentManager contentManager);
+        public abstract void LoadContent();
         public abstract void Update();
-        public abstract void Draw(SpriteBatch spriteBatch);
+        public abstract void Draw();
+        public abstract void UnloadContent();
     }
 }

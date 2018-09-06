@@ -76,10 +76,11 @@
     <Compile Include="Program.cs" />
     <Compile Include="Game1.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Scripts\AnimatedSprite.cs" />
+    <Compile Include="Scripts\Entities\AnimatedSprite.cs" />
     <Compile Include="Scripts\Entities\Player.cs" />
+    <Compile Include="Scripts\Managers\GameStateManager.cs" />
     <Compile Include="Scripts\Managers\LevelManager.cs" />
-    <Compile Include="Scripts\Sprite.cs" />
+    <Compile Include="Scripts\Entities\Sprite.cs" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="MonoGame.Framework">

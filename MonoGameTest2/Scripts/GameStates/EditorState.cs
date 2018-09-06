@@ -11,7 +11,7 @@ namespace MonoGameTest2.GameStates
             throw new NotImplementedException();
         }
 
-        public override void LoadContent(ContentManager contentManager)
+        public override void LoadContent()
         {
             throw new NotImplementedException();
         }
@@ -21,7 +21,12 @@ namespace MonoGameTest2.GameStates
             throw new NotImplementedException();
         }
 
-        public override void Draw(SpriteBatch spriteBatch)
+        public override void Draw()
+        {
+            throw new NotImplementedException();
+        }
+
+        public override void UnloadContent()
         {
             throw new NotImplementedException();
         }

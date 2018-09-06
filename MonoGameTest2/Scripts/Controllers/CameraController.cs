@@ -1,6 +1,6 @@
 ﻿using Microsoft.Xna.Framework;
 
-using MonoGameTest2;
+using MonoGameTest2.Entities;
 using MonoGameTest2.Managers;
 
 namespace MonoGameTest2.Controllers

@@ -25,8 +25,9 @@ namespace MonoGameTest2.GameStates
             };
         }
 
-        public override void LoadContent(ContentManager contentManager)
+        public override void LoadContent()
         {
+            var contentManager = GameManager.ContentManager;
             var avatar = contentManager.Load<Texture2D>("images/SmileyWalk");
 
             Player = new Player(avatar, _playerSpawn);
@@ -41,8 +42,9 @@ namespace MonoGameTest2.GameStates
             Player.Update();
         }
 
-        public override void Draw(SpriteBatch spriteBatch)
+        public override void Draw()
         {
+            var spriteBatch = GameManager.SpriteBatch;
             var fps = Math.Round(1 / GameManager.DeltaTime);
 
             // TODO: Put this string somewhere else, like content.
@@ -63,5 +65,7 @@ namespace MonoGameTest2.GameStates
                 spriteBatch.End();
             }
         }
+
+        public override void UnloadContent() { }
     }
 }

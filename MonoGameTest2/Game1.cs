@@ -11,8 +11,8 @@ namespace MonoGameTest2
     /// </summary>
     public class Game1 : Game
     {
-        GraphicsDeviceManager Graphics;
-        SpriteBatch SpriteBatch;
+        private readonly GraphicsDeviceManager Graphics;
+        private SpriteBatch SpriteBatch;
 
         public Game1()
         {
