@@ -54,9 +54,14 @@ namespace MonoGameTest2
             CalculateViewport();
         }
 
-        public Vector2 WorldToScreen(Vector2 point)
+        public Vector2 WorldToScreen(Vector2 worldPoint)
         {
-            return Vector2.Transform(point, TranslationMatrix);
+            return Vector2.Transform(worldPoint, TranslationMatrix);
+        }
+
+        public Vector2 ScreenToWorld(Vector2 screenPoint)
+        {
+            return screenPoint + Position - new Vector2(Viewport.Width / 2, Viewport.Height / 2);
         }
 
         private void CalculateViewport()

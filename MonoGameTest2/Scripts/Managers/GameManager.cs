@@ -29,9 +29,10 @@ namespace MonoGameTest2.Managers
         public float DeltaTime;
         public double CurrentTimeMS;
         public KeyboardState PreviousKeyboardState;
+        public MouseState PreviousMouseState;
 
         public SpriteFont DefaultFont;
-        public bool ShowDebugInfo = false;
+        public bool ShowDebugInfo = true;
         private StringBuilder _debugInfo;
 
         public GameManager()
@@ -49,7 +50,7 @@ namespace MonoGameTest2.Managers
 
             var screenWidth = Game.GraphicsDevice.Viewport.Width;
             var screenHeight = Game.GraphicsDevice.Viewport.Height;
-            MainCamera = new Camera(new Rectangle(0, 0, screenWidth, screenHeight), new Vector2(screenWidth / 2, screenHeight / 2), new Rectangle(0, 0, LevelManager.ActualWidth, LevelManager.ActualHeight));
+            MainCamera = new Camera(new Rectangle(0, 0, screenWidth, screenHeight), new Vector2(screenWidth / 2, screenHeight / 2));
 
             CameraController = new CameraController();
             CameraController.SetDeadzoneDimensions(96, 96);
@@ -71,12 +72,13 @@ namespace MonoGameTest2.Managers
             DeltaTime = (float)gameTime.ElapsedGameTime.TotalSeconds;
             CurrentTimeMS = gameTime.TotalGameTime.TotalMilliseconds;
 
-            if (KeyboardHelper.GetKeyUp(Keys.F1))
+            var keyboardState = Keyboard.GetState();
+            if (keyboardState.GetKeyUp(Keys.F1))
             {
                 ShowDebugInfo = !ShowDebugInfo;
             }
 
-            if (KeyboardHelper.GetKeyUp(Keys.F2))
+            if (keyboardState.GetKeyUp(Keys.F2))
             {
                 if (!(GameStateManager.CurrentState is PlayState))
                 {
@@ -84,7 +86,7 @@ namespace MonoGameTest2.Managers
                 }
             }
 
-            if (KeyboardHelper.GetKeyUp(Keys.F3))
+            if (keyboardState.GetKeyUp(Keys.F3))
             {
                 if (!(GameStateManager.CurrentState is EditorState))
                 {
@@ -95,7 +97,8 @@ namespace MonoGameTest2.Managers
             GameStateManager.Update();
             CameraController.Update();
 
-            PreviousKeyboardState = Keyboard.GetState();
+            PreviousKeyboardState = keyboardState;
+            PreviousMouseState = Mouse.GetState();
         }
 
         public void Draw(SpriteBatch spriteBatch)
