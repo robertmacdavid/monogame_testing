@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Text;
+using System.Collections.Generic;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
@@ -22,7 +23,8 @@ namespace MonoGameTest2.Managers
 
         public GameStateManager GameStateManager;
         public LevelManager LevelManager;
-        public CameraController CameraController; 
+        public CameraController CameraController;
+        public InputEventHandler MainInputEventHandler;
         public Camera MainCamera;
 
         public GameTime GameTime;
@@ -54,6 +56,13 @@ namespace MonoGameTest2.Managers
 
             CameraController = new CameraController();
             CameraController.SetDeadzoneDimensions(96, 96);
+
+
+            MainInputEventHandler = new InputEventHandler();
+
+            MainInputEventHandler.AddKeyPressHandlers(new Keys[3] { Keys.F1, Keys.F2, Keys.F3 },
+                                                new Action[3] { ToggleDebug, EnterPlayState, EnterEditorState });
+                                                
         }
 
         public void LoadContent(ContentManager contentManager)
@@ -73,32 +82,34 @@ namespace MonoGameTest2.Managers
             CurrentTimeMS = gameTime.TotalGameTime.TotalMilliseconds;
 
             var keyboardState = Keyboard.GetState();
-            if (keyboardState.GetKeyUp(Keys.F1))
-            {
-                ShowDebugInfo = !ShowDebugInfo;
-            }
-
-            if (keyboardState.GetKeyUp(Keys.F2))
-            {
-                if (!(GameStateManager.CurrentState is PlayState))
-                {
-                    GameStateManager.RemoveState();
-                }
-            }
-
-            if (keyboardState.GetKeyUp(Keys.F3))
-            {
-                if (!(GameStateManager.CurrentState is EditorState))
-                {
-                    GameStateManager.AddState(new EditorState());
-                }
-            }
 
             GameStateManager.Update();
             CameraController.Update();
 
             PreviousKeyboardState = keyboardState;
             PreviousMouseState = Mouse.GetState();
+
+            MainInputEventHandler.HandleInput();
+        }
+
+        public void ToggleDebug()
+        {
+            ShowDebugInfo = !ShowDebugInfo;
+        }
+
+        public void EnterPlayState()
+        {
+            if (!(GameStateManager.CurrentState is PlayState))
+            {
+                GameStateManager.RemoveState();
+            }
+        }
+        public void EnterEditorState()
+        {
+            if (!(GameStateManager.CurrentState is EditorState))
+            {
+                GameStateManager.AddState(new EditorState());
+            }
         }
 
         public void Draw(SpriteBatch spriteBatch)
@@ -113,6 +124,7 @@ namespace MonoGameTest2.Managers
                 _debugInfo.AppendLine("Debug Info");
                 _debugInfo.AppendLine($"Game State: {GameStateManager.CurrentState.Name}");
                 _debugInfo.AppendLine($"FPS: {fps}");
+                _debugInfo.AppendLine($"GameTime: {GameTime.TotalGameTime.TotalSeconds}");
             }
 
             GameStateManager.Draw();
