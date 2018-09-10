@@ -13,12 +13,13 @@ namespace MonoGameTest2.Controllers
     }
     public class InputEventHandler : IInputController
     {
+        public List<Keys> newKeys;
+        public List<Keys> heldKeys;
+        public List<Keys> releasedKeys;
+
         private KeyboardState currKeyState;
         private KeyboardState prevKeyState;
 
-        private List<Keys> newKeys;
-        private List<Keys> heldKeys;
-        private List<Keys> releasedKeys;
         private Dictionary<Keys, Action> keyPressActions;
         private Dictionary<Keys, Action> keyHoldActions;
         private Dictionary<Keys, Action> keyReleaseActions;

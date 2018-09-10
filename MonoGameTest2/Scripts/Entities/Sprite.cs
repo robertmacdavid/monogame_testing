@@ -14,6 +14,9 @@ namespace MonoGameTest2.Entities
         public int Height { get; protected set; }
         public Rectangle Mask { get; set; }
 
+        public Rectangle HitBox { get; set; }
+        public bool Solid;
+
         public Sprite(Texture2D texture, Vector2 initialPosition, Rectangle? Mask = null)
         {
             Texture = texture;

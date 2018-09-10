@@ -13,12 +13,7 @@ namespace MonoGameTest2.Entities
 {
     public class Player : Character, IInputController
     {
-        private int _standAnimID;
-        private int _walkAnimID;
-        private bool _isWalking;
         private InputEventHandler PlayerInputEvents;
-
-        private Vector2 InputDirection;
 
 
 
@@ -28,7 +23,7 @@ namespace MonoGameTest2.Entities
         {
             Speed = 500;
 
-            InputDirection = new Vector2(0, 0);
+            TravelDirection = new Vector2(0, 0);
 
             PlayerInputEvents = new InputEventHandler();
 
@@ -72,37 +67,14 @@ namespace MonoGameTest2.Entities
 
         public void HandleInput()
         {
-            var keyState = Keyboard.GetState();
-            HashSet<Action> ActionsToCall = new HashSet<Action>();
 
-
-            InputDirection.X = 0;
-            InputDirection.Y = 0;
-
-
+            ClearTravelDir();
             PlayerInputEvents.HandleInput();
+            NormalizeTravelDir();
 
-            if (InputDirection.LengthSquared() - 1.0 > float.Epsilon)
-                InputDirection.Normalize();
-            Velocity = InputDirection * Speed;
+            Velocity = TravelDirection * Speed;
             Move(Velocity);
         }
 
-        public void GoLeft()
-        {
-            InputDirection.X -= 1;
-        }
-        public void GoRight()
-        {
-            InputDirection.X += 1;
-        }
-        public void GoDown()
-        {
-            InputDirection.Y += 1;
-        }
-        public void GoUp()
-        {
-            InputDirection.Y -= 1;
-        }
     }
 }
