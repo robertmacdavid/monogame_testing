@@ -61,7 +61,7 @@ namespace MonoGameTest2
 
         public Vector2 ScreenToWorld(Vector2 screenPoint)
         {
-            return screenPoint + Position - new Vector2(Viewport.Width / 2, Viewport.Height / 2);
+            return Vector2.Transform(screenPoint, Matrix.Invert(TranslationMatrix));
         }
 
         private void CalculateViewport()

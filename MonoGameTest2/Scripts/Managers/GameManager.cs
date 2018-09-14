@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Text;
-using System.Collections.Generic;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
@@ -8,7 +7,7 @@ using Microsoft.Xna.Framework.Input;
 
 using MonoGameTest2.Controllers;
 using MonoGameTest2.GameStates;
-using MonoGameTest2.Helpers;
+using MonoGameTest2.UI;
 
 namespace MonoGameTest2.Managers
 {
@@ -23,6 +22,8 @@ namespace MonoGameTest2.Managers
 
         public GameStateManager GameStateManager;
         public LevelManager LevelManager;
+        public UIManager UIManager;
+
         public CameraController CameraController;
         public InputEventHandler MainInputEventHandler;
         public Camera MainCamera;
@@ -33,13 +34,17 @@ namespace MonoGameTest2.Managers
         public KeyboardState PreviousKeyboardState;
         public MouseState PreviousMouseState;
 
-        public SpriteFont DefaultFont;
         public bool ShowDebugInfo = true;
         private StringBuilder _debugInfo;
+        private Panel _debugPanel;
+        private Text _debugText;
 
         public GameManager()
         {
             GameStateManager = new GameStateManager();
+            UIManager = new UIManager();
+            LevelManager = new LevelManager();
+
             _debugInfo = new StringBuilder();
         }
 
@@ -47,7 +52,6 @@ namespace MonoGameTest2.Managers
         {
             Game = game;
 
-            LevelManager = new LevelManager();
             LevelManager.BuildLevel();
 
             var screenWidth = Game.GraphicsDevice.Viewport.Width;
@@ -56,6 +60,11 @@ namespace MonoGameTest2.Managers
 
             CameraController = new CameraController();
             CameraController.SetDeadzoneDimensions(96, 96);
+
+            _debugPanel = new Panel(new Rectangle(0, 0, 300, 120));
+            _debugText = new Text(new Rectangle(10, 10, 300, 100), Color.White, false);
+            _debugPanel.AddChild(_debugText);
+            UIManager.AddElement(_debugPanel);
 
 
             MainInputEventHandler = new InputEventHandler();
@@ -68,9 +77,9 @@ namespace MonoGameTest2.Managers
         public void LoadContent(ContentManager contentManager)
         {
             ContentManager = contentManager;
-            DefaultFont = contentManager.Load<SpriteFont>("default_font");
 
             LevelManager.LoadContent(contentManager);
+            UIManager.LoadContent(contentManager);
 
             GameStateManager.AddState(new PlayState());
         }
@@ -94,7 +103,7 @@ namespace MonoGameTest2.Managers
 
         public void ToggleDebug()
         {
-            ShowDebugInfo = !ShowDebugInfo;
+            _debugPanel.Active = !_debugPanel.Active;
         }
 
         public void EnterPlayState()
@@ -129,13 +138,8 @@ namespace MonoGameTest2.Managers
 
             GameStateManager.Draw();
 
-            // Draw debug info
-            if (ShowDebugInfo)
-            {
-                spriteBatch.Begin();
-                spriteBatch.DrawString(DefaultFont, _debugInfo, new Vector2(0, 0), Color.Blue);
-                spriteBatch.End();
-            }
+            _debugText.Value = _debugInfo.ToString();
+            UIManager.Draw(spriteBatch);
         }
 
         public void UnloadContent()

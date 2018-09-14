@@ -1,4 +1,6 @@
 ﻿using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Content;
+using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 
 using MonoGameTest2.Entities;
@@ -18,7 +20,11 @@ namespace MonoGameTest2.GameStates
         private bool _dragging;
         private Vector2 _cameraDragStart;
         private Vector2 _mouseDragStart;
+        private Vector2 _mouseTilePosition;
 
+        private ContentManager _contentManager;
+        private Texture2D _cursorTexture;
+        
         public override void Initialize()
         {
             GameManager.Game.IsMouseVisible = true;
@@ -33,14 +39,17 @@ namespace MonoGameTest2.GameStates
 
         public override void LoadContent()
         {
-            
+            _contentManager = new ContentManager(GameManager.Game.Services, GameManager.ContentManager.RootDirectory);
+            _cursorTexture = _contentManager.Load<Texture2D>("level_editor/cursor");
         }
 
         public override void Update()
         {
             var mouseState = Mouse.GetState();
 
-            if (mouseState.GetButtonDown(MouseButtons.LeftButton))
+            _mouseTilePosition = GameManager.LevelManager.WorldPositionToTilePosition(MainCamera.ScreenToWorld(mouseState.Position.ToVector2()));
+
+            if (mouseState.GetButtonDown(MouseButtons.MiddleButton))
             {
                 StartDragging(mouseState);
             }
@@ -50,7 +59,7 @@ namespace MonoGameTest2.GameStates
                 Drag(mouseState);
             }
 
-            if (mouseState.GetButtonUp(MouseButtons.LeftButton))
+            if (mouseState.GetButtonUp(MouseButtons.MiddleButton))
             {
                 StopDragging();
             }
@@ -91,15 +100,19 @@ namespace MonoGameTest2.GameStates
             if (GameManager.ShowDebugInfo)
             {
                 GameManager.AppendDebug($"Scroll Wheel Value: {MainCamera.Zoom}");
+                GameManager.AppendDebug($"Mouse Tile Position: {_mouseTilePosition}");
             }
 
             spriteBatch.Begin(transformMatrix: GameManager.MainCamera.TranslationMatrix);
             GameManager.LevelManager.Draw(spriteBatch);
+            spriteBatch.Draw(_cursorTexture, _mouseTilePosition, Color.White);
             spriteBatch.End();
         }
 
         public override void UnloadContent()
         {
+            _contentManager.Unload();
+
             GameManager.Game.IsMouseVisible = false;
             GameManager.CameraController.Target = _lastTarget;
             MainCamera.CameraBounds = _lastCameraBounds;

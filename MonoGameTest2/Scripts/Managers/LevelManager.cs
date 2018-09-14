@@ -3,6 +3,7 @@ using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 
 using MonoGameTest2.Helpers;
+using System;
 
 namespace MonoGameTest2.Managers
 {
@@ -54,6 +55,15 @@ namespace MonoGameTest2.Managers
                     spriteBatch.Draw(tileTexture, new Vector2(x * 32, y * 32), Color.White);
                 }
             }
+        }
+
+        public Vector2 WorldPositionToTilePosition(Vector2 worldPosition)
+        {
+            return new Vector2
+            {
+                X = (float)Math.Floor(worldPosition.X / TileSize.X) * TileSize.X,
+                Y = (float)Math.Floor(worldPosition.Y / TileSize.Y) * TileSize.Y
+            };
         }
     }
 }
