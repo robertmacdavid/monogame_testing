@@ -72,7 +72,7 @@
     <Compile Include="Scripts\Helpers\ContentHelper.cs" />
     <Compile Include="Scripts\Helpers\KeyboardHelper.cs" />
     <Compile Include="Scripts\Helpers\MouseHelper.cs" />
-    <Compile Include="Scripts\Level\Level.cs" />
+    <Compile Include="Scripts\Levels\Level.cs" />
     <Compile Include="Scripts\Managers\GameManager.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Game1.cs" />

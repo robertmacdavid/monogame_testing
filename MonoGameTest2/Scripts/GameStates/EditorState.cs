@@ -10,6 +10,12 @@ namespace MonoGameTest2.GameStates
 {
     public class EditorState : GameState
     {
+        private struct EditorCursor
+        {
+            public Vector2 MousePosition;
+            public Vector2 TilePosition;
+        }
+
         public override string Name => "Editor State";
 
         protected Camera MainCamera => GameManager.MainCamera;
@@ -20,7 +26,7 @@ namespace MonoGameTest2.GameStates
         private bool _dragging;
         private Vector2 _cameraDragStart;
         private Vector2 _mouseDragStart;
-        private Vector2 _mouseTilePosition;
+        private EditorCursor _editorCursor;
 
         private ContentManager _contentManager;
         private Texture2D _cursorTexture;
@@ -47,7 +53,8 @@ namespace MonoGameTest2.GameStates
         {
             var mouseState = Mouse.GetState();
 
-            _mouseTilePosition = GameManager.LevelManager.WorldPositionToTilePosition(MainCamera.ScreenToWorld(mouseState.Position.ToVector2()));
+            _editorCursor.MousePosition = GameManager.LevelManager.WorldPositionToTilePosition(MainCamera.ScreenToWorld(mouseState.Position.ToVector2()));
+            _editorCursor.TilePosition = new Vector2(_editorCursor.MousePosition.X / GameManager.LevelManager.TileSize.X, _editorCursor.MousePosition.Y / GameManager.LevelManager.TileSize.Y);
 
             if (mouseState.GetButtonDown(MouseButtons.MiddleButton))
             {
@@ -71,6 +78,11 @@ namespace MonoGameTest2.GameStates
             else if (mouseState.GetScrollDelta() > 0)
             {
                 MainCamera.Zoom *= 1.1f;
+            }
+
+            if (mouseState.GetButtonPressed(MouseButtons.LeftButton))
+            {
+                GameManager.LevelManager.Level.SetTile((uint)_editorCursor.TilePosition.X, (uint)_editorCursor.TilePosition.Y, new Levels.Level.Tile(Levels.Level.TileTypes.Wall));
             }
         }
 
@@ -100,12 +112,12 @@ namespace MonoGameTest2.GameStates
             if (GameManager.ShowDebugInfo)
             {
                 GameManager.AppendDebug($"Scroll Wheel Value: {MainCamera.Zoom}");
-                GameManager.AppendDebug($"Mouse Tile Position: {_mouseTilePosition}");
+                GameManager.AppendDebug($"Tile Position: {_editorCursor.TilePosition}");
             }
 
             spriteBatch.Begin(transformMatrix: GameManager.MainCamera.TranslationMatrix);
             GameManager.LevelManager.Draw(spriteBatch);
-            spriteBatch.Draw(_cursorTexture, _mouseTilePosition, Color.White);
+            spriteBatch.Draw(_cursorTexture, _editorCursor.MousePosition, Color.White);
             spriteBatch.End();
         }
 

@@ -3,22 +3,21 @@ using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 
 using MonoGameTest2.Helpers;
+using MonoGameTest2.Levels;
 using System;
 
 namespace MonoGameTest2.Managers
 {
     public class LevelManager
     {
-        public int Width { get; private set; }
-        public int Height { get; private set; }
+        public Level Level;
 
         public Vector2 TileSize { get; private set; }
 
-        public int ActualWidth { get { return (int)TileSize.X * Width; } }
-        public int ActualHeight { get { return (int)TileSize.Y * Height; } }
+        public int ActualWidth { get { return (int)(TileSize.X * Level.Width); } }
+        public int ActualHeight { get { return (int)(TileSize.Y * Level.Height); } }
 
         private Texture2D[] _tileTextures;
-        private int[,] _tiles;
 
         public void LoadContent(ContentManager contentManager)
         {
@@ -27,18 +26,22 @@ namespace MonoGameTest2.Managers
 
         public void BuildLevel()
         {
+            uint width = 30;
+            uint height = 20;
             TileSize = new Vector2(32, 32);
-            Width = 30;
-            Height = 20;
-            _tiles = new int[Width, Height];
-            
-            for (var y = 0; y < Height; y++)
+            Level = new Level(width, height);
+
+            for (uint y = 0; y < height; y++)
             {
-                for (var x = 0; x < Width; x++)
+                for (uint x = 0; x < width; x++)
                 {
-                    if (y == 0 || y == Height - 1 || x == 0 || x == Width - 1)
+                    if (y == 0 || y == height - 1 || x == 0 || x == width - 1)
                     {
-                        _tiles[x, y] = 1;
+                        Level.SetTile(x, y, new Level.Tile(Level.TileTypes.Wall));
+                    }
+                    else
+                    {
+                        Level.SetTile(x, y, new Level.Tile(Level.TileTypes.Floor));
                     }
                 }
             }
@@ -46,13 +49,17 @@ namespace MonoGameTest2.Managers
 
         public void Draw(SpriteBatch spriteBatch)
         {
-            for (var y = 0; y < Height; y++)
+            for (uint y = 0; y < Level.Height; y++)
             {
-                for (var x = 0; x < Width; x++)
+                for (uint x = 0; x < Level.Width; x++)
                 {
-                    var tile = _tiles[x, y];
-                    var tileTexture = _tileTextures[tile];
-                    spriteBatch.Draw(tileTexture, new Vector2(x * 32, y * 32), Color.White);
+                    var tile = Level.GetTile(x, y);
+                    
+                    if (tile.HasValue)
+                    {
+                        var tileTexture = _tileTextures[(int)tile.Value.TileType];
+                        spriteBatch.Draw(tileTexture, new Vector2(x * 32, y * 32), Color.White);
+                    }
                 }
             }
         }

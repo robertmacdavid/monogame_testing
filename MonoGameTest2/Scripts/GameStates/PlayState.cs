@@ -29,7 +29,7 @@ namespace MonoGameTest2.GameStates
                 Y = screenHeight / 2
             };
 
-            GameManager.MainCamera.CameraBounds = new Rectangle(0, 0, GameManager.LevelManager.ActualWidth, GameManager.LevelManager.ActualHeight);
+            GameManager.MainCamera.CameraBounds = new Rectangle(0, 0, (int)GameManager.LevelManager.ActualWidth, (int)GameManager.LevelManager.ActualHeight);
         }
 
         public override void LoadContent()
