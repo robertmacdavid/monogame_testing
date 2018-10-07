@@ -19,6 +19,27 @@ namespace MonoGameTest2.Managers
             _elements = new List<UIElement>();
         }
 
+        public static Vector2 PixelToUI(Vector2 pixelCoords)
+        {
+            var screenWidth = GameManager.Instance.Game.GraphicsDevice.Viewport.Width;
+            var screenHeight = GameManager.Instance.Game.GraphicsDevice.Viewport.Height;
+
+            return new Vector2(pixelCoords.X / screenWidth, pixelCoords.Y / screenHeight);
+        }
+
+        public static Vector2 UIToPixel(Vector2 uiCoords)
+        {
+            return UIToPixel(uiCoords.X, uiCoords.Y);
+        }
+
+        public static Vector2 UIToPixel(float X, float Y)
+        {
+            var screenWidth = GameManager.Instance.Game.GraphicsDevice.Viewport.Width;
+            var screenHeight = GameManager.Instance.Game.GraphicsDevice.Viewport.Height;
+
+            return new Vector2((int)(X * screenWidth), (int)(Y * screenHeight));
+        }
+
         public void LoadContent(ContentManager contentManager)
         {
             DefaultFont = contentManager.Load<SpriteFont>("default_font");

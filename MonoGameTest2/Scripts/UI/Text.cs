@@ -10,7 +10,7 @@ namespace MonoGameTest2.UI
         public string Value { get; set; }
         public Color Color { get; set; }
 
-        public Text(Rectangle dimensions, Color color, bool wordWrap = true) : base(dimensions)
+        public Text(UIRectangle dimensions, Color color, bool wordWrap = true) : base(dimensions)
         {
             Color = color;
             WordWrap = wordWrap;
@@ -19,12 +19,12 @@ namespace MonoGameTest2.UI
         public override void Draw(SpriteBatch spriteBatch)
         {
             var defaultFont = UIManager.DefaultFont;
+            var newValue = new StringBuilder(Value);
 
-            
             if (WordWrap)
             {
                 var words = Value.Split(' ');
-                var newValue = new StringBuilder();
+                newValue = new StringBuilder();
                 var lineWidth = 0f;
                 var spaceWidth = defaultFont.MeasureString(" ").X;
 
@@ -32,7 +32,7 @@ namespace MonoGameTest2.UI
                 {
                     Vector2 size = defaultFont.MeasureString(word);
 
-                    if (lineWidth + size.X < Dimensions.Width)
+                    if (lineWidth + size.X < RelativeBounds.Width)
                     {
                         lineWidth += size.X + spaceWidth;
                     }
@@ -45,12 +45,15 @@ namespace MonoGameTest2.UI
                     newValue.Append(word + " ");
                 }
 
-                spriteBatch.DrawString(UIManager.DefaultFont, newValue, Dimensions.Location.ToVector2(), Color);
+                spriteBatch.DrawString(UIManager.DefaultFont, newValue, AbsoluteBounds.RealLocation, Color);
             }
             else
             {
-                spriteBatch.DrawString(UIManager.DefaultFont, Value, Dimensions.Location.ToVector2(), Color);
+                spriteBatch.DrawString(UIManager.DefaultFont, newValue, AbsoluteBounds.RealLocation, Color);
             }
+
+            var newSize = Managers.UIManager.PixelToUI(defaultFont.MeasureString(newValue));
+            Resize(new UIRectangle(RelativeBounds.X, RelativeBounds.Y, newSize.X, newSize.Y));
         }
     }
 }

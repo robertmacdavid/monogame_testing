@@ -61,8 +61,13 @@ namespace MonoGameTest2.Managers
             CameraController = new CameraController();
             CameraController.SetDeadzoneDimensions(96, 96);
 
-            _debugPanel = new Panel(new Rectangle(0, 0, 300, 120));
-            _debugText = new Text(new Rectangle(10, 10, 300, 100), Color.White, false);
+            _debugPanel = new Panel(new UIRectangle(0.02f, 0.02f, 0.4f, 0.2f))
+            {
+                FitToContent = true,
+                Padding = new Padding(0.05f)
+            };
+
+            _debugText = new Text(new UIRectangle(0, 0, 1, 1), Color.White, false);
             _debugPanel.AddChild(_debugText);
             UIManager.AddElement(_debugPanel);
 
@@ -72,6 +77,7 @@ namespace MonoGameTest2.Managers
             MainInputEventHandler.AddKeyPressHandlers(new Keys[3] { Keys.F1, Keys.F2, Keys.F3 },
                                                 new Action[3] { ToggleDebug, EnterPlayState, EnterEditorState });
                                                 
+
         }
 
         public void LoadContent(ContentManager contentManager)
@@ -138,7 +144,7 @@ namespace MonoGameTest2.Managers
 
             GameStateManager.Draw();
 
-            _debugText.Value = _debugInfo.ToString();
+            _debugText.Value = _debugInfo.ToString().Substring(0, _debugInfo.Length - 1);
             UIManager.Draw(spriteBatch);
         }
 
