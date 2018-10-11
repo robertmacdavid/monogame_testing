@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
@@ -34,7 +33,7 @@ namespace MonoGameTest2.UI
         }
     }
 
-    public struct UIRectangle
+    public class UIRectangle
     {
         public float X;
         public float Y;
@@ -86,6 +85,11 @@ namespace MonoGameTest2.UI
             Width = width;
             Height = height;
         }
+
+        public bool Contains(Vector2 point)
+        {
+            return point.X >= X && point.X <= X + Width && point.Y >= Y && point.Y <= Y + Height; 
+        }
     }
 
     public abstract class UIElement
@@ -130,6 +134,8 @@ namespace MonoGameTest2.UI
         public UIElement Parent;
         public Padding Padding;
 
+        public Texture2D Texture;
+
         public UIElement(UIElement parent, UIRectangle bounds)
         {
             RelativeBounds = bounds;
@@ -142,8 +148,7 @@ namespace MonoGameTest2.UI
             }
             else
             {
-                Resize();
-                Active = parent.Active;
+                parent.AddChild(this);
             }
         }
 
@@ -152,6 +157,7 @@ namespace MonoGameTest2.UI
         public void AddChild(UIElement uiElement)
         {
             uiElement.Parent = this;
+            uiElement.Active = Active;
             Children.Add(uiElement);
 
             uiElement.Resize();
@@ -159,10 +165,10 @@ namespace MonoGameTest2.UI
 
         public void Resize()
         {
-            float left = AbsoluteBounds.Left;
-            float right = AbsoluteBounds.Right;
-            float top = AbsoluteBounds.Top;
-            float bottom = AbsoluteBounds.Bottom;
+            float left = AbsoluteBounds?.Left ?? 0;
+            float right = AbsoluteBounds?.Right ?? 0;
+            float top = AbsoluteBounds?.Top ?? 0;
+            float bottom = AbsoluteBounds?.Bottom ?? 0;
 
             if (!FitToContent && Parent != null)
             {
@@ -187,7 +193,7 @@ namespace MonoGameTest2.UI
                 bottom += Padding.Bottom;
             }*/
 
-            AbsoluteBounds = new UIRectangle(left, top, AbsoluteBounds.Width, AbsoluteBounds.Height);
+            AbsoluteBounds = new UIRectangle(left, top, right - left, bottom - top);
 
             if (Parent != null)
             {
@@ -201,6 +207,12 @@ namespace MonoGameTest2.UI
             Resize();
         }
 
-        public abstract void Draw(SpriteBatch spriteBatch);
+        public virtual void Draw(SpriteBatch spriteBatch)
+        {
+            if (Texture != null)
+            {
+                spriteBatch.Draw(Texture, AbsoluteBounds.RealDimensions, Color.White);
+            }
+        }
     }
 }

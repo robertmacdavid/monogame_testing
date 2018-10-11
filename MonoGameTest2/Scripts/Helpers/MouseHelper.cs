@@ -8,10 +8,11 @@ namespace MonoGameTest2.Helpers
     public enum MouseButtons
     {
         LeftButton,
-        MiddleButton,
         RightButton,
+        MiddleButton,
         Mouse4,
-        Mouse5
+        Mouse5,
+        None
     }
 
     public static class MouseHelper
@@ -62,6 +63,11 @@ namespace MonoGameTest2.Helpers
         public static bool GetButtonUp(this MouseState mouseState, MouseButtons button)
         {
             return mouseState.GetButtonReleased(button) && GameManager.Instance.PreviousMouseState.GetButtonPressed(button);
+        }
+
+        public static Vector2 GetScreenPosition(this MouseState mouseState)
+        {
+            return new Vector2(mouseState.Position.X / GameManager.Instance.ScreenWidth, mouseState.Position.Y / GameManager.Instance.ScreenHeight);
         }
 
         public static Vector2 GetPositionDelta(this MouseState mouseState)

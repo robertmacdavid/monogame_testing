@@ -4,17 +4,19 @@ using Microsoft.Xna.Framework.Graphics;
 
 namespace MonoGameTest2.UI
 {
-    class Text : UIElement
+    class UIText : UIElement
     {
         public bool WordWrap { get; set; }
         public string Value { get; set; }
         public Color Color { get; set; }
 
-        public Text(UIRectangle dimensions, Color color, bool wordWrap = true) : base(dimensions)
+        public UIText(UIElement parent, UIRectangle dimensions, Color color, bool wordWrap = true) : base(parent, dimensions)
         {
             Color = color;
             WordWrap = wordWrap;
         }
+
+        public UIText(UIRectangle dimensions, Color color, bool wordWrap = true) : this(null, dimensions, color, wordWrap) {  }
 
         public override void Draw(SpriteBatch spriteBatch)
         {

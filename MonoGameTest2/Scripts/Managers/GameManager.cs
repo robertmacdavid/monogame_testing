@@ -13,6 +13,9 @@ namespace MonoGameTest2.Managers
 {
     public class GameManager
     {
+        public int ScreenWidth => Game.GraphicsDevice.Viewport.Width;
+        public int ScreenHeight => Game.GraphicsDevice.Viewport.Height;
+
         private static GameManager _instance;
         public static GameManager Instance { get { return _instance ?? (_instance = new GameManager()); } }
 
@@ -36,8 +39,8 @@ namespace MonoGameTest2.Managers
 
         public bool ShowDebugInfo = true;
         private StringBuilder _debugInfo;
-        private Panel _debugPanel;
-        private Text _debugText;
+        private UIPanel _debugPanel;
+        private UIText _debugText;
 
         public GameManager()
         {
@@ -61,23 +64,10 @@ namespace MonoGameTest2.Managers
             CameraController = new CameraController();
             CameraController.SetDeadzoneDimensions(96, 96);
 
-            _debugPanel = new Panel(new UIRectangle(0.02f, 0.02f, 0.4f, 0.2f))
-            {
-                FitToContent = true,
-                Padding = new Padding(0.05f)
-            };
-
-            _debugText = new Text(new UIRectangle(0, 0, 1, 1), Color.White, false);
-            _debugPanel.AddChild(_debugText);
-            UIManager.AddElement(_debugPanel);
-
-
             MainInputEventHandler = new InputEventHandler();
 
             MainInputEventHandler.AddKeyPressHandlers(new Keys[3] { Keys.F1, Keys.F2, Keys.F3 },
-                                                new Action[3] { ToggleDebug, EnterPlayState, EnterEditorState });
-                                                
-
+                                                new Action[3] { ToggleDebug, EnterPlayState, EnterEditorState });    
         }
 
         public void LoadContent(ContentManager contentManager)
@@ -86,6 +76,22 @@ namespace MonoGameTest2.Managers
 
             LevelManager.LoadContent(contentManager);
             UIManager.LoadContent(contentManager);
+
+            _debugPanel = new UIPanel(new UIRectangle(0.02f, 0.02f, 0.4f, 0.3f))
+            {
+                FitToContent = true,
+                Padding = new Padding(0.05f)
+            };
+
+            _debugText = new UIText(_debugPanel, new UIRectangle(0, 0, 1, 1), Color.White, false);
+            var testButton = new UIButton(_debugPanel, new UIRectangle(0, 0.75f, 1, 0.25f))
+            {
+                OnClick = (e) => AppendDebug("OK!")
+            };
+            var buttonPanel = new UIPanel(testButton, new UIRectangle(0, 0, 1, 1), Color.Blue);
+
+            UIManager.AddElement(_debugPanel);
+
 
             GameStateManager.AddState(new PlayState());
         }
@@ -100,6 +106,7 @@ namespace MonoGameTest2.Managers
 
             GameStateManager.Update();
             CameraController.Update();
+            UIManager.Update();
 
             PreviousKeyboardState = keyboardState;
             PreviousMouseState = Mouse.GetState();
