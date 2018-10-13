@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
@@ -52,8 +53,8 @@ namespace MonoGameTest2.UI
         {
             get
             {
-                var screenWidth = GameManager.Instance.Game.GraphicsDevice.Viewport.Width;
-                var screenHeight = GameManager.Instance.Game.GraphicsDevice.Viewport.Height;
+                var screenWidth = GameManager.Instance.ScreenWidth;
+                var screenHeight = GameManager.Instance.ScreenHeight;
                 return new Rectangle((int)(screenWidth * X), (int)(screenHeight * Y), (int)(screenWidth * Width), (int)(screenHeight * Height));
             }
         }
@@ -88,7 +89,12 @@ namespace MonoGameTest2.UI
 
         public bool Contains(Vector2 point)
         {
-            return point.X >= X && point.X <= X + Width && point.Y >= Y && point.Y <= Y + Height; 
+            return point.X >= X && point.X <= (X + Width) && point.Y >= Y && point.Y <= (Y + Height); 
+        }
+
+        public override string ToString()
+        {
+            return $"UIRectangle: {{ X: {X}, Y: {Y}, Width:{Width}, Height:{Height} }}";
         }
     }
 
@@ -165,35 +171,46 @@ namespace MonoGameTest2.UI
 
         public void Resize()
         {
-            float left = AbsoluteBounds?.Left ?? 0;
-            float right = AbsoluteBounds?.Right ?? 0;
-            float top = AbsoluteBounds?.Top ?? 0;
-            float bottom = AbsoluteBounds?.Bottom ?? 0;
+            var parentLeft = Parent?.AbsoluteBounds.Left ?? 0;
+            var parentTop = Parent?.AbsoluteBounds.Top ?? 0;
+            var parentWidth = Parent?.AbsoluteBounds.Width ?? 1;
+            var parentHeight = Parent?.AbsoluteBounds.Height ?? 1;
 
-            if (!FitToContent && Parent != null)
+            var left = parentLeft + RelativeBounds.Left * parentWidth + (Parent?.Padding.Left ?? 0) * parentWidth;
+            var top = parentTop + RelativeBounds.Top * parentHeight + (Parent?.Padding.Top ?? 0) * parentHeight;
+            var width = parentWidth * RelativeBounds.Width - ((Parent?.Padding.Left ?? 0) + (Parent?.Padding.Right ?? 0)) * parentWidth;
+            var height = parentHeight * RelativeBounds.Height - ((Parent?.Padding.Top ?? 0) + (Parent?.Padding.Bottom ?? 0)) * parentHeight;
+
+            /*if (FitToContent && Children.Count > 0)
             {
-                left = Parent.AbsoluteBounds.Left + RelativeBounds.Left * Parent.AbsoluteBounds.Width + Parent.Padding.Left * Parent.AbsoluteBounds.Width;
-                right = Parent.AbsoluteBounds.Right + RelativeBounds.Right * Parent.AbsoluteBounds.Width - Parent.Padding.Right * Parent.AbsoluteBounds.Width;
-                top = Parent.AbsoluteBounds.Top + RelativeBounds.Top * Parent.AbsoluteBounds.Height + Parent.Padding.Top * Parent.AbsoluteBounds.Height;
-                bottom = Parent.AbsoluteBounds.Bottom + RelativeBounds.Bottom * Parent.AbsoluteBounds.Height - Parent.Padding.Bottom * Parent.AbsoluteBounds.Height;
-            }
-            /*else if (FitToContent)
-            {
+                var leftMost = Children[0].AbsoluteBounds.Left;
+                var topMost = Children[0].AbsoluteBounds.Top;
+                var rightMost = Children[0].AbsoluteBounds.Right;
+                var bottomMost = Children[0].AbsoluteBounds.Bottom;
+
                 foreach (var child in Children)
                 {
-                    left = Math.Min(child.AbsoluteBounds.Left, left);
-                    right = Math.Max(child.AbsoluteBounds.Right, right);
-                    top = Math.Min(child.AbsoluteBounds.Top, top);
-                    bottom = Math.Max(child.AbsoluteBounds.Bottom, bottom);
+                    leftMost = Math.Min(child.AbsoluteBounds.Left, leftMost);
+                    topMost = Math.Min(child.AbsoluteBounds.Top, topMost);
+                    rightMost = Math.Max(child.AbsoluteBounds.Right, rightMost);
+                    bottomMost = Math.Max(child.AbsoluteBounds.Bottom, bottomMost);
                 }
 
-                left -= Padding.Left;
-                right += Padding.Right;
-                top -= Padding.Top;
-                bottom += Padding.Bottom;
+                var childrenWidth = rightMost - leftMost;
+                var childrenHeight = bottomMost - topMost;
+
+                if (!float.IsNaN(childrenWidth) && width < childrenWidth)
+                {
+                    width = childrenWidth + Padding.Left + Padding.Right;
+                }
+
+                if (!float.IsNaN(childrenHeight) && height < childrenHeight)
+                {
+                    height = childrenHeight + Padding.Top + Padding.Bottom;
+                }
             }*/
 
-            AbsoluteBounds = new UIRectangle(left, top, right - left, bottom - top);
+            AbsoluteBounds = new UIRectangle(left, top, width, height);
 
             if (Parent != null)
             {

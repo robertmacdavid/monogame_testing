@@ -67,7 +67,7 @@ namespace MonoGameTest2.Helpers
 
         public static Vector2 GetScreenPosition(this MouseState mouseState)
         {
-            return new Vector2(mouseState.Position.X / GameManager.Instance.ScreenWidth, mouseState.Position.Y / GameManager.Instance.ScreenHeight);
+            return new Vector2(mouseState.Position.X / (float)GameManager.Instance.ScreenWidth, mouseState.Position.Y / (float)GameManager.Instance.ScreenHeight);
         }
 
         public static Vector2 GetPositionDelta(this MouseState mouseState)

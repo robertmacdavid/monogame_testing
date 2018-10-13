@@ -10,13 +10,14 @@ namespace MonoGameTest2.UI
         public string Value { get; set; }
         public Color Color { get; set; }
 
-        public UIText(UIElement parent, UIRectangle dimensions, Color color, bool wordWrap = true) : base(parent, dimensions)
+        public UIText(UIElement parent, UIRectangle bounds, Color? color = null, bool wordWrap = true) : base(parent, bounds)
         {
-            Color = color;
+            Value = "";
+            Color = color ?? Color.White;
             WordWrap = wordWrap;
         }
 
-        public UIText(UIRectangle dimensions, Color color, bool wordWrap = true) : this(null, dimensions, color, wordWrap) {  }
+        public UIText(UIRectangle bounds, Color? color = null, bool wordWrap = true) : this(null, bounds, color, wordWrap) {  }
 
         public override void Draw(SpriteBatch spriteBatch)
         {

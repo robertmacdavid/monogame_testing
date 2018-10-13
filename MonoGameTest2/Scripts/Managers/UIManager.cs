@@ -61,23 +61,36 @@ namespace MonoGameTest2.Managers
             // TODO: Check if mouse is down over UI element.
             var mouseState = Mouse.GetState();
             var mousePosition = mouseState.GetScreenPosition();
-            var mouseButton = mouseState.GetButtonReleased(MouseButtons.LeftButton) ? MouseButtons.LeftButton : MouseButtons.None;
-            var e = new UIClickEventData(mouseButton);
+            var mouseButton = mouseState.GetButtonUp(MouseButtons.LeftButton) ? MouseButtons.LeftButton : MouseButtons.None;
+            var e = new UIClickEventData(mousePosition, mouseButton);
+
 
             foreach (var element in _elements)
             {
-                if (element is IUIClickable)
-                {
-                    var clickable = element as IUIClickable;
-                    if (clickable.CheckMouseOver(mousePosition))
-                    {
-                        clickable.MouseOver(e);
-                    }
+                UpdateHelper(element, e);
+            }
+        }
 
-                    if (mouseButton == MouseButtons.LeftButton && clickable.CheckReleased(MouseButtons.LeftButton, mousePosition)) {
-                        clickable.Click(e);
-                    }
+        private void UpdateHelper(UIElement element, UIClickEventData e)
+        {
+            if (element is IUIClickable)
+            {
+                var clickable = element as IUIClickable;
+
+                if (clickable.CheckMouseOver(e.Position))
+                {
+                    clickable.MouseOver(e);
                 }
+
+                if (e.Button == MouseButtons.LeftButton && clickable.CheckReleased(e))
+                {
+                    clickable.Click(e);
+                }
+            }
+
+            foreach (var child in element.Children)
+            {
+                UpdateHelper(child, e); 
             }
         }
 
@@ -87,17 +100,23 @@ namespace MonoGameTest2.Managers
 
             foreach (var element in _elements)
             {
-                if (!element.Active) continue;
-
-                element.Draw(spriteBatch);
-
-                foreach (var child in element.Children)
-                {
-                    child.Draw(spriteBatch);
-                }
+                DrawHelper(element, spriteBatch);
             }
 
             spriteBatch.End();
+        }
+
+        private void DrawHelper(UIElement element, SpriteBatch spriteBatch)
+        {
+            if (element.Active)
+            {
+                element.Draw(spriteBatch);
+            }
+
+            foreach (var child in element.Children)
+            {
+                DrawHelper(child, spriteBatch);
+            }
         }
     }
 }

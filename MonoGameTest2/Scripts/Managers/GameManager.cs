@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Text;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
@@ -42,6 +43,8 @@ namespace MonoGameTest2.Managers
         private UIPanel _debugPanel;
         private UIText _debugText;
 
+        public DebugConsole Console;
+
         public GameManager()
         {
             GameStateManager = new GameStateManager();
@@ -80,18 +83,19 @@ namespace MonoGameTest2.Managers
             _debugPanel = new UIPanel(new UIRectangle(0.02f, 0.02f, 0.4f, 0.3f))
             {
                 FitToContent = true,
-                Padding = new Padding(0.05f)
+                Padding = new Padding(0.05f),
             };
 
             _debugText = new UIText(_debugPanel, new UIRectangle(0, 0, 1, 1), Color.White, false);
             var testButton = new UIButton(_debugPanel, new UIRectangle(0, 0.75f, 1, 0.25f))
             {
-                OnClick = (e) => AppendDebug("OK!")
+                OnClick = (e) => Console.AddLine("OK!")
             };
             var buttonPanel = new UIPanel(testButton, new UIRectangle(0, 0, 1, 1), Color.Blue);
-
             UIManager.AddElement(_debugPanel);
 
+            Console = new DebugConsole(new UIRectangle(0.58f, 0.02f, 0.4f, 0.3f));
+            UIManager.AddElement(Console);
 
             GameStateManager.AddState(new PlayState());
         }
@@ -117,6 +121,7 @@ namespace MonoGameTest2.Managers
         public void ToggleDebug()
         {
             _debugPanel.Active = !_debugPanel.Active;
+            Console.Active = !Console.Active;
         }
 
         public void EnterPlayState()
@@ -169,5 +174,7 @@ namespace MonoGameTest2.Managers
 
             _debugInfo.AppendLine(info);
         }
+
+
     }
 }

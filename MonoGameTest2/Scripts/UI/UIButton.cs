@@ -9,15 +9,15 @@ namespace MonoGameTest2.UI
     class UIButton : UIElement, IUIClickable
     {
         public delegate void ClickEventHandler(UIClickEventData e);
-        public ClickEventHandler OnClick;
-        public ClickEventHandler OnMouseOver;
+        public ClickEventHandler OnClick { get; set; }
+        public ClickEventHandler OnMouseOver { get; set; }
 
-        public UIButton(UIElement parent, UIRectangle dimensions) : base(parent, dimensions) { }
-        public UIButton(UIRectangle dimensions) : this(null, dimensions) { }
+        public UIButton(UIElement parent, UIRectangle bounds) : base(parent, bounds) { }
+        public UIButton(UIRectangle bounds) : this(null, bounds) { }
 
-        public bool CheckReleased(MouseButtons mouseButton, Vector2 mousePosition)
+        public bool CheckReleased(UIClickEventData e)
         {
-            return AbsoluteBounds.Contains(mousePosition);
+            return AbsoluteBounds.Contains(e.Position);
         }
 
         public bool CheckMouseOver(Vector2 mousePosition)
