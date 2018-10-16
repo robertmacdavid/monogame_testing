@@ -82,7 +82,7 @@ namespace MonoGameTest2.Managers
         {
             var block = false;
 
-            if (element is IUIClickable)
+            if (element is IUIClickable && element.Active)
             {
                 var clickable = element as IUIClickable;
 
