@@ -38,11 +38,11 @@ namespace MonoGameTest2.Managers
             _states.Push(newState);
         }
 
-        public void Update()
+        public void Update(bool blockMouseUpdates)
         {
             if (CurrentState != null)
             {
-                CurrentState.Update();
+                CurrentState.Update(blockMouseUpdates);
             }
         }
 

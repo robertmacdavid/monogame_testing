@@ -8,14 +8,14 @@ namespace MonoGameTest2.UI
 {
     class UIButton : UIElement, IUIClickable
     {
-        public delegate void ClickEventHandler(UIClickEventData e);
+        public delegate void ClickEventHandler(UIMouseEventData e);
         public ClickEventHandler OnClick { get; set; }
         public ClickEventHandler OnMouseOver { get; set; }
 
         public UIButton(UIElement parent, UIRectangle bounds) : base(parent, bounds) { }
         public UIButton(UIRectangle bounds) : this(null, bounds) { }
 
-        public bool CheckReleased(UIClickEventData e)
+        public bool CheckReleased(UIMouseEventData e)
         {
             return AbsoluteBounds.Contains(e.Position);
         }
@@ -25,12 +25,13 @@ namespace MonoGameTest2.UI
             return AbsoluteBounds.Contains(mousePosition);
         }
 
-        public void MouseOver(UIClickEventData e)
+        public bool MouseOver(UIMouseEventData e)
         {
             OnMouseOver?.Invoke(e);
+            return true;
         }
 
-        public void Click(UIClickEventData e)
+        public void Click(UIMouseEventData e)
         {
             OnClick?.Invoke(e);
         }

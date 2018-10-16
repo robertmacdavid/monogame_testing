@@ -43,7 +43,7 @@ namespace MonoGameTest2.GameStates
             GameManager.CameraController.Target = Player;
         }
 
-        public override void Update()
+        public override void Update(bool blockMouseUpdates)
         {
             Player.HandleInput();
             Player.Update();

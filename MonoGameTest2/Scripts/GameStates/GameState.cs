@@ -12,7 +12,7 @@ namespace MonoGameTest2.GameStates
 
         public abstract void Initialize();
         public abstract void LoadContent();
-        public abstract void Update();
+        public abstract void Update(bool blockMouseUpdates);
         public abstract void Draw();
         public abstract void UnloadContent();
     }

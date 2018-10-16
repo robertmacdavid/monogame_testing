@@ -4,7 +4,7 @@ using MonoGameTest2.Managers;
 
 namespace MonoGameTest2.UI
 {
-    public class UIPanel : UIElement
+    public class UIPanel : UIElement, IUIClickable
     {
         public Color Color;
 
@@ -19,6 +19,26 @@ namespace MonoGameTest2.UI
         public override void Draw(SpriteBatch spriteBatch)
         {
             spriteBatch.Draw(Texture, AbsoluteBounds.RealDimensions, Color);
+        }
+
+        public bool CheckMouseOver(Vector2 mousePosition)
+        {
+            return AbsoluteBounds.Contains(mousePosition);
+        }
+
+        public bool CheckReleased(UIMouseEventData e)
+        {
+            return false;
+        }
+
+        public bool MouseOver(UIMouseEventData e)
+        {
+            return true;
+        }
+
+        public void Click(UIMouseEventData e)
+        {
+            throw new System.Exception("This shouldn't ever execute.");
         }
     }
 }

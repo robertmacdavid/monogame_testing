@@ -94,7 +94,7 @@ namespace MonoGameTest2.Managers
             var buttonPanel = new UIPanel(testButton, new UIRectangle(0, 0, 1, 1), Color.Blue);
             UIManager.AddElement(_debugPanel);
 
-            Console = new DebugConsole(new UIRectangle(0.58f, 0.02f, 0.4f, 0.3f));
+            Console = new DebugConsole(new UIRectangle(0.58f, 0.02f, 0.4f, 0.325f));
             UIManager.AddElement(Console);
 
             GameStateManager.AddState(new PlayState());
@@ -108,9 +108,11 @@ namespace MonoGameTest2.Managers
 
             var keyboardState = Keyboard.GetState();
 
-            GameStateManager.Update();
             CameraController.Update();
-            UIManager.Update();
+
+            var blockMouseUpdate = UIManager.Update();
+            GameStateManager.Update(blockMouseUpdate);
+      
 
             PreviousKeyboardState = keyboardState;
             PreviousMouseState = Mouse.GetState();

@@ -49,7 +49,7 @@ namespace MonoGameTest2.GameStates
             _cursorTexture = _contentManager.Load<Texture2D>("level_editor/cursor");
         }
 
-        public override void Update()
+        public override void Update(bool blockMouseUpdates)
         {
             var mouseState = Mouse.GetState();
 
@@ -80,7 +80,7 @@ namespace MonoGameTest2.GameStates
                 MainCamera.Zoom *= 1.1f;
             }
 
-            if (mouseState.GetButtonPressed(MouseButtons.LeftButton))
+            if (!blockMouseUpdates && mouseState.GetButtonPressed(MouseButtons.LeftButton))
             {
                 GameManager.LevelManager.Level.SetTile((uint)_editorCursor.TilePosition.X, (uint)_editorCursor.TilePosition.Y, new Levels.Level.Tile(Levels.Level.TileTypes.Wall));
             }

@@ -55,31 +55,40 @@ namespace MonoGameTest2.Managers
             _elements.Add(element);
         }
 
-        public void Update()
+        /// <summary>
+        /// Updates any UI elements.
+        /// </summary>
+        /// <returns>Whether or not we should block mouse actions when updating entities.</returns>
+        public bool Update()
         {
             // TODO: Check other mouse buttons.
             // TODO: Check if mouse is down over UI element.
             var mouseState = Mouse.GetState();
             var mousePosition = mouseState.GetScreenPosition();
             var mouseButton = mouseState.GetButtonUp(MouseButtons.LeftButton) ? MouseButtons.LeftButton : MouseButtons.None;
-            var e = new UIClickEventData(mousePosition, mouseButton);
+            var e = new UIMouseEventData(mousePosition, mouseButton);
 
 
+            var block = false;
             foreach (var element in _elements)
             {
-                UpdateHelper(element, e);
+                block |= UpdateHelper(element, e);
             }
+
+            return block;
         }
 
-        private void UpdateHelper(UIElement element, UIClickEventData e)
+        private bool UpdateHelper(UIElement element, UIMouseEventData e)
         {
+            var block = false;
+
             if (element is IUIClickable)
             {
                 var clickable = element as IUIClickable;
 
                 if (clickable.CheckMouseOver(e.Position))
                 {
-                    clickable.MouseOver(e);
+                    block = clickable.MouseOver(e);
                 }
 
                 if (e.Button == MouseButtons.LeftButton && clickable.CheckReleased(e))
@@ -90,8 +99,10 @@ namespace MonoGameTest2.Managers
 
             foreach (var child in element.Children)
             {
-                UpdateHelper(child, e); 
+                block |= UpdateHelper(child, e); 
             }
+
+            return block;
         }
 
         public void Draw(SpriteBatch spriteBatch)
