@@ -53,9 +53,7 @@ namespace MonoGameTest2.UI
         {
             get
             {
-                var screenWidth = GameManager.Instance.ScreenWidth;
-                var screenHeight = GameManager.Instance.ScreenHeight;
-                return new Rectangle((int)(screenWidth * X), (int)(screenHeight * Y), (int)(screenWidth * Width), (int)(screenHeight * Height));
+                return new Rectangle((int)(GameManager.NATIVE_SCREEN_WIDTH * X), (int)(GameManager.NATIVE_SCREEN_HEIGHT * Y), (int)(GameManager.NATIVE_SCREEN_WIDTH * Width), (int)(GameManager.NATIVE_SCREEN_HEIGHT * Height));
             }
         }
 

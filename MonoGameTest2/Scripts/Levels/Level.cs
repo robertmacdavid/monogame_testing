@@ -37,7 +37,7 @@ namespace MonoGameTest2.Levels
         public uint Width;
         public uint Height;
 
-        private List<Tile>[,] _tiles;
+        private readonly List<Tile>[,] _tiles;
 
         public Level(uint width, uint height)
         {

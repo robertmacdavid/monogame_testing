@@ -53,7 +53,7 @@ namespace MonoGameTest2.GameStates
         {
             var mouseState = Mouse.GetState();
 
-            _editorCursor.MousePosition = GameManager.LevelManager.WorldPositionToTilePosition(MainCamera.ScreenToWorld(mouseState.Position.ToVector2()));
+            _editorCursor.MousePosition = GameManager.LevelManager.WorldPositionToTilePosition(MainCamera.ScreenToWorld(mouseState.GetPosition()));
             _editorCursor.TilePosition = new Vector2(_editorCursor.MousePosition.X / GameManager.LevelManager.TileSize.X, _editorCursor.MousePosition.Y / GameManager.LevelManager.TileSize.Y);
 
             if (mouseState.GetButtonDown(MouseButtons.MiddleButton))
@@ -89,14 +89,14 @@ namespace MonoGameTest2.GameStates
         private void StartDragging(MouseState mouseState)
         {
             Mouse.SetCursor(MouseCursor.SizeAll);
-            _mouseDragStart = mouseState.Position.ToVector2();
+            _mouseDragStart = mouseState.GetPosition();
             _cameraDragStart = MainCamera.Position;
             _dragging = true;
         }
 
         private void Drag(MouseState mouseState)
         {
-            MainCamera.Position = _cameraDragStart - ((mouseState.Position.ToVector2() - _mouseDragStart)/MainCamera.Zoom);
+            MainCamera.Position = _cameraDragStart - ((mouseState.GetPosition() - _mouseDragStart)/MainCamera.Zoom);
         }
 
         private void StopDragging()

@@ -65,14 +65,20 @@ namespace MonoGameTest2.Helpers
             return mouseState.GetButtonReleased(button) && GameManager.Instance.PreviousMouseState.GetButtonPressed(button);
         }
 
+        public static Vector2 GetPosition(this MouseState mouseState)
+        {
+            return mouseState.Position.ToVector2() / GameManager.Instance.Zoom;
+        }
+
         public static Vector2 GetScreenPosition(this MouseState mouseState)
         {
-            return new Vector2(mouseState.Position.X / (float)GameManager.Instance.ScreenWidth, mouseState.Position.Y / (float)GameManager.Instance.ScreenHeight);
+            var mousePosition = mouseState.GetPosition();
+            return new Vector2(mousePosition.X / GameManager.NATIVE_SCREEN_WIDTH, mousePosition.Y / GameManager.NATIVE_SCREEN_HEIGHT);
         }
 
         public static Vector2 GetPositionDelta(this MouseState mouseState)
         {
-            return (mouseState.Position - GameManager.Instance.PreviousMouseState.Position).ToVector2();
+            return (mouseState.GetPosition() - GameManager.Instance.PreviousMouseState.GetPosition());
         }
 
         public static int GetScrollDelta(this MouseState mouseState)

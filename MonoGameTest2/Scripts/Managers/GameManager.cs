@@ -14,13 +14,16 @@ namespace MonoGameTest2.Managers
 {
     public class GameManager
     {
-        public int ScreenWidth => Game.GraphicsDevice.Viewport.Width;
-        public int ScreenHeight => Game.GraphicsDevice.Viewport.Height;
+        public const int NATIVE_SCREEN_WIDTH = 480;
+        public const int NATIVE_SCREEN_HEIGHT = 270;
+
+        //public int ScreenWidth => Game.GraphicsDevice.Viewport.Width;
+        //public int ScreenHeight => Game.GraphicsDevice.Viewport.Height;
 
         private static GameManager _instance;
         public static GameManager Instance { get { return _instance ?? (_instance = new GameManager()); } }
 
-        public Game Game;
+        public Game1 Game;
         public ContentManager ContentManager;
         public SpriteBatch SpriteBatch;
 
@@ -38,6 +41,11 @@ namespace MonoGameTest2.Managers
         public KeyboardState PreviousKeyboardState;
         public MouseState PreviousMouseState;
 
+        private RenderTarget2D _nativeRenderTarget;
+        private Rectangle _actualScreenRectangle;
+        private byte _zoom;
+        public byte Zoom { get { return _zoom; } set { SetZoom(value); } }
+
         public bool ShowDebugInfo = true;
         private StringBuilder _debugInfo;
         private UIPanel _debugPanel;
@@ -54,15 +62,15 @@ namespace MonoGameTest2.Managers
             _debugInfo = new StringBuilder();
         }
 
-        public void Initialize(Game game)
+        public void Initialize(Game1 game)
         {
             Game = game;
 
-            LevelManager.BuildLevel();
+            _nativeRenderTarget = new RenderTarget2D(Game.GraphicsDevice, NATIVE_SCREEN_WIDTH, NATIVE_SCREEN_HEIGHT);
+            Zoom = 2;
 
-            var screenWidth = Game.GraphicsDevice.Viewport.Width;
-            var screenHeight = Game.GraphicsDevice.Viewport.Height;
-            MainCamera = new Camera(new Rectangle(0, 0, screenWidth, screenHeight), new Vector2(screenWidth / 2, screenHeight / 2));
+            LevelManager.BuildLevel();
+            MainCamera = new Camera(new Rectangle(0, 0, NATIVE_SCREEN_WIDTH, NATIVE_SCREEN_HEIGHT), new Vector2(NATIVE_SCREEN_WIDTH / 2, NATIVE_SCREEN_HEIGHT / 2));
 
             CameraController = new CameraController();
             CameraController.SetDeadzoneDimensions(96, 96);
@@ -70,7 +78,7 @@ namespace MonoGameTest2.Managers
             MainInputEventHandler = new InputEventHandler();
 
             MainInputEventHandler.AddKeyPressHandlers(new Keys[3] { Keys.F1, Keys.F2, Keys.F3 },
-                                                new Action[3] { ToggleDebug, EnterPlayState, EnterEditorState });    
+                                                new Action[3] { ToggleDebug, EnterPlayState, EnterEditorState });
         }
 
         public void LoadContent(ContentManager contentManager)
@@ -87,11 +95,6 @@ namespace MonoGameTest2.Managers
             };
 
             _debugText = new UIText(_debugPanel, new UIRectangle(0, 0, 1, 1), Color.White, false);
-            var testButton = new UIButton(_debugPanel, new UIRectangle(0, 0.75f, 1, 0.25f))
-            {
-                OnClick = (e) => Console.AddLine("OK!")
-            };
-            var buttonPanel = new UIPanel(testButton, new UIRectangle(0, 0, 1, 1), Color.Blue);
             UIManager.AddElement(_debugPanel);
 
             Console = new DebugConsole(new UIRectangle(0.58f, 0.02f, 0.4f, 0.325f));
@@ -156,10 +159,18 @@ namespace MonoGameTest2.Managers
                 _debugInfo.AppendLine($"GameTime: {GameTime.TotalGameTime.TotalSeconds}");
             }
 
-            GameStateManager.Draw();
+            Game.GraphicsDevice.SetRenderTarget(_nativeRenderTarget);
+            Game.GraphicsDevice.Clear(Color.Black);
 
+            GameStateManager.Draw();
             _debugText.Value = _debugInfo.ToString().Substring(0, _debugInfo.Length - 1);
             UIManager.Draw(spriteBatch);
+
+            Game.GraphicsDevice.SetRenderTarget(null);
+
+            spriteBatch.Begin(samplerState: SamplerState.PointClamp);
+            spriteBatch.Draw(_nativeRenderTarget, _actualScreenRectangle, Color.White);
+            spriteBatch.End();
         }
 
         public void UnloadContent()
@@ -177,6 +188,17 @@ namespace MonoGameTest2.Managers
             _debugInfo.AppendLine(info);
         }
 
+        private void SetZoom(byte value)
+        {
+            _zoom = value;
+            var width = NATIVE_SCREEN_WIDTH * _zoom;
+            var height = NATIVE_SCREEN_HEIGHT * _zoom;
 
+            _actualScreenRectangle = new Rectangle(0, 0, width, height);
+
+            Game.Graphics.PreferredBackBufferWidth = width;
+            Game.Graphics.PreferredBackBufferHeight = height;
+            Game.Graphics.ApplyChanges();
+        }
     }
 }

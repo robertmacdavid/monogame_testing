@@ -23,10 +23,7 @@ namespace MonoGameTest2.Managers
 
         public static Vector2 PixelToUI(Vector2 pixelCoords)
         {
-            var screenWidth = GameManager.Instance.ScreenWidth;
-            var screenHeight = GameManager.Instance.ScreenHeight;
-
-            return new Vector2(pixelCoords.X / screenWidth, pixelCoords.Y / screenHeight);
+            return new Vector2(pixelCoords.X / GameManager.NATIVE_SCREEN_WIDTH, pixelCoords.Y / GameManager.NATIVE_SCREEN_HEIGHT);
         }
 
         public static Vector2 UIToPixel(Vector2 uiCoords)
@@ -36,10 +33,7 @@ namespace MonoGameTest2.Managers
 
         public static Vector2 UIToPixel(float X, float Y)
         {
-            var screenWidth = GameManager.Instance.ScreenWidth;
-            var screenHeight = GameManager.Instance.ScreenHeight;
-
-            return new Vector2((int)(X * screenWidth), (int)(Y * screenHeight));
+            return new Vector2((int)(X * GameManager.NATIVE_SCREEN_WIDTH), (int)(Y * GameManager.NATIVE_SCREEN_HEIGHT));
         }
 
         public void LoadContent(ContentManager contentManager)

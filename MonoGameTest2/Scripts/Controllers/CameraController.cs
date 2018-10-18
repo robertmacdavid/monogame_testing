@@ -16,8 +16,7 @@ namespace MonoGameTest2.Controllers
 
         public void SetDeadzoneDimensions(int width, int height)
         {
-            var viewPort = GameManager.Instance.Game.GraphicsDevice.Viewport;
-            _deadzone = new Rectangle(viewPort.Width/2 - width/2, viewPort.Height/2 - height/2, width, height);
+            _deadzone = new Rectangle(GameManager.NATIVE_SCREEN_WIDTH/2 - width/2, GameManager.NATIVE_SCREEN_HEIGHT/2 - height/2, width, height);
         }
 
         public void Update()

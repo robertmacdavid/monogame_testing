@@ -1,5 +1,7 @@
 ﻿using Microsoft.Xna.Framework;
 
+using MonoGameTest2.Managers;
+
 namespace MonoGameTest2
 {
     public class Camera

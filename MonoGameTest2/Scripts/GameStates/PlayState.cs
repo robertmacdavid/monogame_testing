@@ -20,16 +20,13 @@ namespace MonoGameTest2.GameStates
         {
             GameManager.Game.IsMouseVisible = false;
 
-            var screenWidth = GameManager.Game.GraphicsDevice.Viewport.Width;
-            var screenHeight = GameManager.Game.GraphicsDevice.Viewport.Height;
-
             _playerSpawn = new Vector2
             {
-                X = screenWidth / 2,
-                Y = screenHeight / 2
+                X = GameManager.NATIVE_SCREEN_WIDTH / 2,
+                Y = GameManager.NATIVE_SCREEN_HEIGHT / 2
             };
 
-            GameManager.MainCamera.CameraBounds = new Rectangle(0, 0, (int)GameManager.LevelManager.ActualWidth, (int)GameManager.LevelManager.ActualHeight);
+            GameManager.MainCamera.CameraBounds = new Rectangle(0, 0, GameManager.LevelManager.ActualWidth, GameManager.LevelManager.ActualHeight);
         }
 
         public override void LoadContent()

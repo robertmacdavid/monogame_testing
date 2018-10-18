@@ -28,7 +28,7 @@ namespace MonoGameTest2.Managers
         {
             uint width = 30;
             uint height = 20;
-            TileSize = new Vector2(32, 32);
+            TileSize = new Vector2(16, 16);
             Level = new Level(width, height);
 
             for (uint y = 0; y < height; y++)
@@ -58,7 +58,7 @@ namespace MonoGameTest2.Managers
                     if (tile.HasValue)
                     {
                         var tileTexture = _tileTextures[(int)tile.Value.TileType];
-                        spriteBatch.Draw(tileTexture, new Vector2(x * 32, y * 32), Color.White);
+                        spriteBatch.Draw(tileTexture, new Vector2(x * TileSize.X, y * TileSize.Y), Color.White);
                     }
                 }
             }
