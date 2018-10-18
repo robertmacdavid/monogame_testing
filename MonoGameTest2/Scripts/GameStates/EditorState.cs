@@ -111,8 +111,8 @@ namespace MonoGameTest2.GameStates
 
             if (GameManager.ShowDebugInfo)
             {
-                GameManager.AppendDebug($"Scroll Wheel Value: {MainCamera.Zoom}");
-                GameManager.AppendDebug($"Tile Position: {_editorCursor.TilePosition}");
+                GameManager.RealTimeDebug.Append("Scroll Wheel Value", MainCamera.Zoom);
+                GameManager.RealTimeDebug.Append("Tile Position", _editorCursor.TilePosition);
             }
 
             spriteBatch.Begin(transformMatrix: GameManager.MainCamera.TranslationMatrix);

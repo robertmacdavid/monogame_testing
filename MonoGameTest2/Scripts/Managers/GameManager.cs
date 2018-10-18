@@ -1,6 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
@@ -47,19 +45,14 @@ namespace MonoGameTest2.Managers
         public byte Zoom { get { return _zoom; } set { SetZoom(value); } }
 
         public bool ShowDebugInfo = true;
-        private StringBuilder _debugInfo;
-        private UIPanel _debugPanel;
-        private UIText _debugText;
-
-        public DebugConsole Console;
+        public DebugConsole Console { get; private set; }
+        public RealTimeDebug RealTimeDebug { get; private set; }
 
         public GameManager()
         {
             GameStateManager = new GameStateManager();
             UIManager = new UIManager();
             LevelManager = new LevelManager();
-
-            _debugInfo = new StringBuilder();
         }
 
         public void Initialize(Game1 game)
@@ -88,14 +81,8 @@ namespace MonoGameTest2.Managers
             LevelManager.LoadContent(contentManager);
             UIManager.LoadContent(contentManager);
 
-            _debugPanel = new UIPanel(new UIRectangle(0.02f, 0.02f, 0.4f, 0.3f))
-            {
-                FitToContent = true,
-                Padding = new Padding(0.05f),
-            };
-
-            _debugText = new UIText(_debugPanel, new UIRectangle(0, 0, 1, 1), Color.White, false);
-            UIManager.AddElement(_debugPanel);
+            RealTimeDebug = new RealTimeDebug(new UIRectangle(0.02f, 0.02f, 0.4f, 0.3f));
+            UIManager.AddElement(RealTimeDebug);
 
             Console = new DebugConsole(new UIRectangle(0.58f, 0.02f, 0.4f, 0.325f));
             UIManager.AddElement(Console);
@@ -125,7 +112,7 @@ namespace MonoGameTest2.Managers
 
         public void ToggleDebug()
         {
-            _debugPanel.Active = !_debugPanel.Active;
+            RealTimeDebug.Active = !RealTimeDebug.Active;
             Console.Active = !Console.Active;
         }
 
@@ -150,20 +137,14 @@ namespace MonoGameTest2.Managers
 
             var fps = Math.Round(1 / DeltaTime);
 
-            if (ShowDebugInfo)
-            {
-                _debugInfo.Clear();
-                _debugInfo.AppendLine("Debug Info");
-                _debugInfo.AppendLine($"Game State: {GameStateManager.CurrentState.Name}");
-                _debugInfo.AppendLine($"FPS: {fps}");
-                _debugInfo.AppendLine($"GameTime: {GameTime.TotalGameTime.TotalSeconds}");
-            }
+            RealTimeDebug.Append("Game State", GameStateManager.CurrentState.Name);
+            RealTimeDebug.Append("FPS", fps);
+            RealTimeDebug.Append("Game Time", GameTime.TotalGameTime.TotalSeconds);
 
             Game.GraphicsDevice.SetRenderTarget(_nativeRenderTarget);
             Game.GraphicsDevice.Clear(Color.Black);
 
             GameStateManager.Draw();
-            _debugText.Value = _debugInfo.ToString().Substring(0, _debugInfo.Length - 1);
             UIManager.Draw(spriteBatch);
 
             Game.GraphicsDevice.SetRenderTarget(null);
@@ -176,16 +157,6 @@ namespace MonoGameTest2.Managers
         public void UnloadContent()
         {
             ContentManager.Unload();
-        }
-
-        public void AppendDebug(string info)
-        {
-            if (!ShowDebugInfo)
-            {
-                return;
-            }
-
-            _debugInfo.AppendLine(info);
         }
 
         private void SetZoom(byte value)

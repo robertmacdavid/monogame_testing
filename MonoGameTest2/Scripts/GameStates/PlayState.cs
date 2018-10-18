@@ -50,7 +50,7 @@ namespace MonoGameTest2.GameStates
         {
             var spriteBatch = GameManager.SpriteBatch;
 
-            GameManager.AppendDebug($"Player Position: {Player.Position}");
+            GameManager.RealTimeDebug.Append("Player Position", Player.Position);
 
             spriteBatch.Begin(transformMatrix: GameManager.MainCamera.TranslationMatrix);
             GameManager.LevelManager.Draw(spriteBatch);
