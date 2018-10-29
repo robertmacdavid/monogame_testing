@@ -40,8 +40,8 @@ namespace MonoGameTest2.Entities
         public void LoadContent(ContentManager contentManager)
         {
             _stand = AddAnimation(new Animation("stand", new byte[] { 0 }));
-            _walkRight = AddAnimation(new Animation("stand", new byte[] { 1, 2, 3, 4 }, 2));
-            _walkLeft = AddAnimation(new Animation("stand", new byte[] { 4, 3, 2, 1 }, 2));
+            _walkRight = AddAnimation(new Animation("walk-left", new byte[] { 1, 2, 3, 4 }, 2));
+            _walkLeft = AddAnimation(new Animation("walk-right", new byte[] { 4, 3, 2, 1 }, 2));
 
             SetAnimation(_stand);
         }

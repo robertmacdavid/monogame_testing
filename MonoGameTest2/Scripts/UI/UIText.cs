@@ -36,26 +36,33 @@ namespace MonoGameTest2.UI
             if (WordWrap)
             {
                 var defaultFont = UIManager.DefaultFont;
-                var words = Value.Split(' ', '\n');
+                var lines = Value.Split('\n');
                 var currentLineWidth = 0;
                 var spaceWidth = (int)defaultFont.MeasureString(" ").X;
                 _displayString.Clear();
 
-                foreach (var word in words)
+                foreach (var line in lines)
                 {
-                    var wordSize = defaultFont.MeasureString(word);
-
-                    if (currentLineWidth + wordSize.X <= AbsoluteBounds.RealDimensions.Width)
+                    var words = line.Split(' ');
+                    foreach (var word in words)
                     {
-                        currentLineWidth += (int)wordSize.X + spaceWidth;
-                    }
-                    else
-                    {
-                        _displayString.Append("\n");
-                        currentLineWidth = (int)wordSize.X + spaceWidth;
+                        var wordSize = defaultFont.MeasureString(word);
+
+                        if (currentLineWidth + wordSize.X <= AbsoluteBounds.RealDimensions.Width)
+                        {
+                            currentLineWidth += (int)wordSize.X + spaceWidth;
+                        }
+                        else
+                        {
+                            _displayString.AppendLine();
+                            currentLineWidth = (int)wordSize.X + spaceWidth;
+                        }
+
+                        _displayString.Append(word + " ");
                     }
 
-                    _displayString.Append(word + " ");
+                    _displayString.AppendLine();
+                    currentLineWidth = 0;
                 }
             }
             else
