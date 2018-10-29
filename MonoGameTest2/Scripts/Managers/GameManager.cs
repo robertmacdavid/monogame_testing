@@ -58,18 +58,14 @@ namespace MonoGameTest2.Managers
         public void Initialize(Game1 game)
         {
             Game = game;
-
-            _nativeRenderTarget = new RenderTarget2D(Game.GraphicsDevice, NATIVE_SCREEN_WIDTH, NATIVE_SCREEN_HEIGHT);
             Zoom = 2;
-
-            LevelManager.BuildLevel();
+            _nativeRenderTarget = new RenderTarget2D(Game.GraphicsDevice, NATIVE_SCREEN_WIDTH, NATIVE_SCREEN_HEIGHT);
             MainCamera = new Camera(new Rectangle(0, 0, NATIVE_SCREEN_WIDTH, NATIVE_SCREEN_HEIGHT), new Vector2(NATIVE_SCREEN_WIDTH / 2, NATIVE_SCREEN_HEIGHT / 2));
-
             CameraController = new CameraController();
-            CameraController.SetDeadzoneDimensions(96, 96);
-
             MainInputEventHandler = new InputEventHandler();
 
+            LevelManager.BuildLevel();
+            CameraController.SetDeadzoneDimensions(96, 96);
             MainInputEventHandler.AddKeyPressHandlers(new Keys[3] { Keys.F1, Keys.F2, Keys.F3 },
                                                 new Action[3] { ToggleDebug, EnterPlayState, EnterEditorState });
         }
@@ -81,10 +77,11 @@ namespace MonoGameTest2.Managers
             LevelManager.LoadContent(contentManager);
             UIManager.LoadContent(contentManager);
 
-            RealTimeDebug = new RealTimeDebug(new UIRectangle(0.02f, 0.02f, 0.4f, 0.3f));
+            RealTimeDebug = new RealTimeDebug(new UIRectangle(0.02f, 0.02f, 0.96f, 0.3f));
             UIManager.AddElement(RealTimeDebug);
 
             Console = new DebugConsole(new UIRectangle(0.58f, 0.02f, 0.4f, 0.325f));
+            Console.Active = false;
             UIManager.AddElement(Console);
 
             GameStateManager.AddState(new PlayState());
@@ -99,14 +96,11 @@ namespace MonoGameTest2.Managers
             var keyboardState = Keyboard.GetState();
 
             CameraController.Update();
-
             var blockMouseUpdate = UIManager.Update();
             GameStateManager.Update(blockMouseUpdate);
-      
 
             PreviousKeyboardState = keyboardState;
             PreviousMouseState = Mouse.GetState();
-
             MainInputEventHandler.HandleInput();
         }
 

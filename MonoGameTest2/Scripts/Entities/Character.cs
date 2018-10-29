@@ -6,14 +6,12 @@ namespace MonoGameTest2.Entities
     public class Character : AnimatedSprite
     {
         public float Speed;
-        protected int _standAnimID;
-        protected int _walkAnimID;
-        protected bool _isWalking;
-
         protected Vector2 TravelDirection;
         protected Vector2 FacingDirection;
 
-        public Character(Texture2D texture, Vector2 spawnPosition, int rows, int columns) : base(texture, spawnPosition, rows, columns) {}
+        public Character(Texture2D texture, Vector2 spawnPosition, int rows, int columns) : base(texture, spawnPosition, rows, columns)
+        {
+        }
 
         public void GoLeft()
         {
@@ -43,7 +41,6 @@ namespace MonoGameTest2.Entities
             if (TravelDirection.LengthSquared() - 1.0 > float.Epsilon)
                 TravelDirection.Normalize();
         }
-
     }
 
 

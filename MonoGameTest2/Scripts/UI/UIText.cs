@@ -7,56 +7,68 @@ namespace MonoGameTest2.UI
     class UIText : UIElement
     {
         public bool WordWrap { get; set; }
-        public string Value { get; set; }
+
+        private string _value;
+        public string Value
+        {
+            get { return _value; }
+            set { SetValue(value); }
+        }
+
         public Color Color { get; set; }
+
+        private StringBuilder _displayString;
 
         public UIText(UIElement parent, UIRectangle bounds, Color? color = null, bool wordWrap = true) : base(parent, bounds)
         {
-            Value = "";
             Color = color ?? Color.White;
             WordWrap = wordWrap;
+            _displayString = new StringBuilder();
         }
 
         public UIText(UIRectangle bounds, Color? color = null, bool wordWrap = true) : this(null, bounds, color, wordWrap) {  }
 
-        public override void Draw(SpriteBatch spriteBatch)
+        private void SetValue(string value)
         {
-            var defaultFont = UIManager.DefaultFont;
-            var newValue = new StringBuilder(Value);
+            _displayString.Clear();
+            _value = value;
 
             if (WordWrap)
             {
-                var words = Value.Split(' ');
-                newValue = new StringBuilder();
-                var lineWidth = 0f;
-                var spaceWidth = defaultFont.MeasureString(" ").X;
+                var defaultFont = UIManager.DefaultFont;
+                var words = Value.Split(' ', '\n');
+                var currentLineWidth = 0;
+                var spaceWidth = (int)defaultFont.MeasureString(" ").X;
+                _displayString.Clear();
 
                 foreach (var word in words)
                 {
-                    Vector2 size = defaultFont.MeasureString(word);
+                    var wordSize = defaultFont.MeasureString(word);
 
-                    if (lineWidth + size.X < RelativeBounds.Width)
+                    if (currentLineWidth + wordSize.X <= AbsoluteBounds.RealDimensions.Width)
                     {
-                        lineWidth += size.X + spaceWidth;
+                        currentLineWidth += (int)wordSize.X + spaceWidth;
                     }
                     else
                     {
-                        newValue.Append("\n");
-                        lineWidth = size.X + spaceWidth;
+                        _displayString.Append("\n");
+                        currentLineWidth = (int)wordSize.X + spaceWidth;
                     }
 
-                    newValue.Append(word + " ");
+                    _displayString.Append(word + " ");
                 }
-
-                spriteBatch.DrawString(UIManager.DefaultFont, newValue, AbsoluteBounds.RealLocation, Color);
             }
             else
             {
-                spriteBatch.DrawString(UIManager.DefaultFont, newValue, AbsoluteBounds.RealLocation, Color);
+                _displayString.Append(value);
             }
+        }
 
-            var newSize = Managers.UIManager.PixelToUI(defaultFont.MeasureString(newValue));
-            Resize(new UIRectangle(RelativeBounds.X, RelativeBounds.Y, newSize.X, newSize.Y));
+        public override void Draw(SpriteBatch spriteBatch)
+        {
+            spriteBatch.DrawString(UIManager.DefaultFont, _displayString.ToString(), AbsoluteBounds.RealLocation, Color);
+            //var newSize = Managers.UIManager.PixelToUI(defaultFont.MeasureString(newValue));
+            //Resize(new UIRectangle(RelativeBounds.X, RelativeBounds.Y, newSize.X, newSize.Y));
         }
     }
 }

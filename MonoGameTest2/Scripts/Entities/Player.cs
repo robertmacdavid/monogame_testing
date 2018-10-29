@@ -13,15 +13,17 @@ namespace MonoGameTest2.Entities
 {
     public class Player : Character, IInputController
     {
+        private bool _isWalking;
+        private int _stand;
+        private int _walkRight;
+        private int _walkLeft;
         private InputEventHandler PlayerInputEvents;
-
-
 
         public Vector2 Velocity { get; private set; }
 
-        public Player(Texture2D texture, Vector2 spawnPosition) : base(texture, spawnPosition, 4, 4)
+        public Player(Vector2 spawnPosition) : base(GameManager.Instance.ContentManager.Load<Texture2D>("characters/new_man"), spawnPosition, 1, 5)
         {
-            Speed = 500;
+            Speed = 50;
 
             TravelDirection = new Vector2(0, 0);
 
@@ -37,10 +39,11 @@ namespace MonoGameTest2.Entities
 
         public void LoadContent(ContentManager contentManager)
         {
-            _standAnimID = AddAnimation("stand", 0, 4, 4, 0);
-            _walkAnimID = AddAnimation("walk", 0, 16, 32, 1);
+            _stand = AddAnimation(new Animation("stand", new byte[] { 0 }));
+            _walkRight = AddAnimation(new Animation("stand", new byte[] { 1, 2, 3, 4 }, 2));
+            _walkLeft = AddAnimation(new Animation("stand", new byte[] { 4, 3, 2, 1 }, 2));
 
-            SetAnimation(_standAnimID);
+            SetAnimation(_stand);
         }
 
         public new void Draw(SpriteBatch spriteBatch)
@@ -50,7 +53,8 @@ namespace MonoGameTest2.Entities
                 if (_isWalking)
                 {
                     _isWalking = false;
-                    StopAnimation(_walkAnimID);
+                    StopAnimation(_walkLeft);
+                    StopAnimation(_walkRight);
                 }
             }
             else
@@ -58,7 +62,15 @@ namespace MonoGameTest2.Entities
                 if (!_isWalking)
                 {
                     _isWalking = true;
-                    SetAnimation(_walkAnimID);
+
+                    if (Velocity.X > 0)
+                    {
+                        SetAnimation(_walkRight);
+                    }
+                    else
+                    {
+                        SetAnimation(_walkLeft);
+                    }
                 }
             }
 
@@ -67,7 +79,6 @@ namespace MonoGameTest2.Entities
 
         public void HandleInput()
         {
-
             ClearTravelDir();
             PlayerInputEvents.HandleInput();
             NormalizeTravelDir();

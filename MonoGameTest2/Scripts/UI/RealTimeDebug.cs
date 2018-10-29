@@ -19,7 +19,7 @@ namespace MonoGameTest2.UI
                 Padding = new Padding(0.05f),
             };
 
-            _debugText = new UIText(debugPanel, new UIRectangle(0, 0, 1, 1), Color.White, false);
+            _debugText = new UIText(debugPanel, new UIRectangle(0, 0, 1, 1), Color.White, true);
             _debugInfo = new StringBuilder(HEADER);
         }
 

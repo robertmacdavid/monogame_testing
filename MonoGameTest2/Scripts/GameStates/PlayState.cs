@@ -31,11 +31,8 @@ namespace MonoGameTest2.GameStates
 
         public override void LoadContent()
         {
-            var contentManager = GameManager.ContentManager;
-            var avatar = contentManager.Load<Texture2D>("images/SmileyWalk");
-
-            Player = new Player(avatar, _playerSpawn);
-            Player.LoadContent(contentManager);
+            Player = new Player(_playerSpawn);
+            Player.LoadContent(GameManager.ContentManager);
 
             GameManager.CameraController.Target = Player;
         }
@@ -51,6 +48,7 @@ namespace MonoGameTest2.GameStates
             var spriteBatch = GameManager.SpriteBatch;
 
             GameManager.RealTimeDebug.Append("Player Position", Player.Position);
+            GameManager.RealTimeDebug.Append("Animation", Player.CurrentAnimation);
 
             spriteBatch.Begin(transformMatrix: GameManager.MainCamera.TranslationMatrix);
             GameManager.LevelManager.Draw(spriteBatch);

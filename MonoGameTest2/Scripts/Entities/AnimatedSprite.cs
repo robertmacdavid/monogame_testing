@@ -49,17 +49,12 @@ namespace MonoGameTest2.Entities
         /// <summary>
         /// Adds an animation to this sprite.
         /// </summary>
-        /// <param name="startFrame"></param>
-        /// <param name="numFrames"></param>
-        /// <param name="framerate"></param>
-        /// <param name="priority"></param>
-        /// <returns>An ID for this animation.</returns>
-        public int AddAnimation(string name, int startFrame, int numFrames, int framerate, int priority, bool loop=true)
+        /// <param name="animation"></param>
+        /// <returns>The ID for this animation.</returns>
+        public int AddAnimation(Animation animation)
         {
-            int animationID = _animations.Count;
-            var animation = new Animation(name, startFrame, numFrames, framerate, priority, animationID, loop);
             _animations.Add(animation);
-            return animationID;
+            return animation.ID;
         }
 
         /// <summary>
@@ -103,15 +98,12 @@ namespace MonoGameTest2.Entities
         /// </summary>
         public void Update()
         {
-
-            _currentFrame = CurrentAnimation.Update();
+            _currentFrame = CurrentAnimation.GetFrame();
             if (_currentFrame == -1)
             {
                 _activeAnimations.Remove(CurrentAnimation);
                 CurrentAnimation = _activeAnimations.Max();
             }
-
-
         }
 
         /// <summary>
@@ -120,11 +112,11 @@ namespace MonoGameTest2.Entities
         /// <param name="spriteBatch">The sprite batch used to render this sprite.</param>
         public new void Draw(SpriteBatch spriteBatch)
         {
-            int row = (int)((float)_currentFrame / (float)Columns);
-            int column = _currentFrame % Columns;
+            var row = _currentFrame / Columns;
+            var column = _currentFrame % Columns;
 
-            Rectangle sourceRectangle = new Rectangle(Width * column, Height * row, Width, Height);
-            Rectangle destinationRectangle = new Rectangle((int)Position.X - Width/2, (int)Position.Y - Height/2, Width, Height);
+            var sourceRectangle = new Rectangle(Width * column, Height * row, Width, Height);
+            var destinationRectangle = new Rectangle((int)Position.X - Width/2, (int)Position.Y - Height/2, Width, Height);
 
             spriteBatch.Draw(Texture, destinationRectangle, sourceRectangle, Color.White);
         }
@@ -135,29 +127,44 @@ namespace MonoGameTest2.Entities
     /// </summary>
     public class Animation : IComparable<Animation>
     {
+        private static int _animationIDs = 0;
+        private static int GetAnimationID()
+        {
+            return _animationIDs++;
+        }
+
         public string Name { get; set; }
-        public bool IsActive { get; private set; }
+        public bool Playing { get; private set; }
         public int ID { get; private set; }
+        public int Priority { get; set; }
+        public byte[] Sequence { get; private set; }
+
+        private int _frameRate;
+        public int FrameRate {
+            get
+            {
+                return _frameRate;
+            }
+            set
+            {
+                _frameRate = value;
+                _millisecondsPerFrame = 1000d / _frameRate;
+            }
+        }
+        public bool Loop { get; set; }
 
         private bool _hasBeenUpdated;
         private double _animStartTime;
-        private int _startFrame;
-        private int _priority;
+        private double _millisecondsPerFrame;
 
-        private readonly int _numFrames;
-        private readonly bool _loop;
-        private readonly double _millisecondsPerFrame;
-
-        public Animation(string name, int startFrame, int numFrames, int framerate, int priority, int id, bool loop)
+        public Animation(string name, byte[] sequence, int frameRate = 4, int priority = 0, bool loop = true)
         {
-            ID = id;
+            ID = GetAnimationID();
             Name = name;
-
-            _startFrame = startFrame;
-            _numFrames = numFrames;
-            _millisecondsPerFrame = 1000.0d / framerate;
-            _priority = priority;
-            _loop = loop;
+            FrameRate = frameRate;
+            Priority = priority;
+            Loop = loop;
+            Sequence = sequence;
         }
 
         public override string ToString()
@@ -166,54 +173,54 @@ namespace MonoGameTest2.Entities
                 $"Name: {Name}, " +
                 $"ID: {ID}, " +
                 $"Started at: {_animStartTime}, " +
-                $"{_numFrames} Frames, " +
-                $"{1000.0d/_millisecondsPerFrame} FPS, " +
-                (_loop ? "Looped, " : "Unlooped, ") +
-                (IsActive ? "Active" : "Inactive") + 
+                $"{Sequence.Length} Frames, " +
+                $"{FrameRate} FPS, " +
+                (Loop ? "Looped, " : "Unlooped, ") +
+                (Playing ? "Active" : "Inactive") + 
                 ")";
         }
 
         public int CompareTo(Animation that)
         {
-            if (_priority == that._priority)
+            if (Priority == that.Priority)
             {
-                return _startFrame.CompareTo(that._startFrame);
+                return Sequence[0].CompareTo(that.Sequence[0]);
             }
 
-            return _priority.CompareTo(that._priority);
+            return Priority.CompareTo(that.Priority);
         }
 
         public void Start()
         {
-            IsActive = true;
+            Playing = true;
             _hasBeenUpdated = false;
         }
 
         /// <summary>
         /// Updates the animation to go to the next frame.
         /// </summary>
-        /// <returns>The index of the frame to be drawn.</returns>
-        public int Update()
+        /// <returns>The current frame.</returns>
+        public int GetFrame()
         {
-            double callTime = GameManager.Instance.CurrentTimeMS;
+            var callTime = GameManager.Instance.CurrentTimeMS;
             if (!_hasBeenUpdated)
             {
                 _hasBeenUpdated = true;
                 _animStartTime = callTime;
             }
 
-            int currentFrame = (int)Math.Floor((callTime - _animStartTime) / _millisecondsPerFrame);
-            if (!_loop && currentFrame >= _numFrames)
+            var currentFrame = (int)Math.Floor((callTime - _animStartTime) / _millisecondsPerFrame);
+            if (!Loop && currentFrame > Sequence.Length)
             {
                 return -1;
             }
 
-            return _startFrame + (currentFrame % _numFrames);
+            return Sequence[currentFrame % Sequence.Length];
         }
 
         public void Stop()
         {
-            IsActive = false;
+            Playing = false;
         }
     }
 }
