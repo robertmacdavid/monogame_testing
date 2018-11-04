@@ -14,24 +14,22 @@ namespace MonoGameTest2.Entities
         public int Height { get; protected set; }
         public Rectangle Mask { get; set; }
 
-        public Rectangle HitBox { get; set; }
-        public bool Solid;
-
         public Sprite(Texture2D texture, Vector2 initialPosition, Rectangle? Mask = null)
         {
             Texture = texture;
             Position = initialPosition;
             Width = texture.Width;
             Height = texture.Height;
-            if (Mask == null)
-                this.Mask = new Rectangle(0, 0, Width, Height);
-            else
-                this.Mask = (Rectangle)Mask;
+            Mask = Mask ?? new Rectangle(0, 0, Width, Height);
         }
 
+        /// <summary>
+        /// Moves sprite in tiles per second.
+        /// </summary>
+        /// <param name="velocity">The velocity in tiles per second.</param>
         public void Move(Vector2 velocity)
         {
-            Position += velocity * GameManager.Instance.DeltaTime;
+            Position += velocity * LevelManager.TileSize * GameManager.Instance.DeltaTime;
         }
 
         public void Draw(SpriteBatch spriteBatch)

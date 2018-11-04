@@ -70,6 +70,7 @@
     <Compile Include="Scripts\GameStates\EditorState.cs" />
     <Compile Include="Scripts\GameStates\PlayState.cs" />
     <Compile Include="Scripts\Helpers\ContentHelper.cs" />
+    <Compile Include="Scripts\Helpers\Debug.cs" />
     <Compile Include="Scripts\Helpers\KeyboardHelper.cs" />
     <Compile Include="Scripts\Helpers\MouseHelper.cs" />
     <Compile Include="Scripts\Levels\Level.cs" />
@@ -83,7 +84,7 @@
     <Compile Include="Scripts\Managers\LevelManager.cs" />
     <Compile Include="Scripts\Entities\Sprite.cs" />
     <Compile Include="Scripts\Managers\UIManager.cs" />
-    <Compile Include="Scripts\Physics\Collision.cs" />
+    <Compile Include="Scripts\Physics\ICollidable.cs" />
     <Compile Include="Scripts\UI\DebugConsole.cs" />
     <Compile Include="Scripts\UI\IUIClickable.cs" />
     <Compile Include="Scripts\UI\RealTimeDebug.cs" />

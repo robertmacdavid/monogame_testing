@@ -24,14 +24,14 @@ namespace MonoGameTest2.UI
             _lines = new Queue<string>(MAX_LINES);
         }
 
-        public void AddLine(string newLine)
+        public void AddLine<T>(T newLine)
         {
             if (_lines.Count == MAX_LINES)
             {
                 _lines.Dequeue();
             }
 
-            _lines.Enqueue(newLine);
+            _lines.Enqueue(newLine.ToString());
 
             var consoleText = "";
             foreach (var line in _lines.Skip(_lines.Count - 10))

@@ -15,8 +15,7 @@ namespace MonoGameTest2.Managers
         public const int NATIVE_SCREEN_WIDTH = 480;
         public const int NATIVE_SCREEN_HEIGHT = 270;
 
-        //public int ScreenWidth => Game.GraphicsDevice.Viewport.Width;
-        //public int ScreenHeight => Game.GraphicsDevice.Viewport.Height;
+        public static Texture2D PIXEL_TEXTURE;
 
         private static GameManager _instance;
         public static GameManager Instance { get { return _instance ?? (_instance = new GameManager()); } }
@@ -57,17 +56,31 @@ namespace MonoGameTest2.Managers
 
         public void Initialize(Game1 game)
         {
+            PIXEL_TEXTURE = new Texture2D(game.GraphicsDevice, 1, 1);
+            PIXEL_TEXTURE.SetData(new[] { Color.White });
+
             Game = game;
             Zoom = 2;
             _nativeRenderTarget = new RenderTarget2D(Game.GraphicsDevice, NATIVE_SCREEN_WIDTH, NATIVE_SCREEN_HEIGHT);
-            MainCamera = new Camera(new Rectangle(0, 0, NATIVE_SCREEN_WIDTH, NATIVE_SCREEN_HEIGHT), new Vector2(NATIVE_SCREEN_WIDTH / 2, NATIVE_SCREEN_HEIGHT / 2));
+            MainCamera = new Camera(
+                new Rectangle(0, 0, NATIVE_SCREEN_WIDTH, NATIVE_SCREEN_HEIGHT), 
+                new Vector2(NATIVE_SCREEN_WIDTH / 2, NATIVE_SCREEN_HEIGHT / 2)
+            );
             CameraController = new CameraController();
             MainInputEventHandler = new InputEventHandler();
 
             LevelManager.BuildLevel();
             CameraController.SetDeadzoneDimensions(96, 96);
-            MainInputEventHandler.AddKeyPressHandlers(new Keys[3] { Keys.F1, Keys.F2, Keys.F3 },
-                                                new Action[3] { ToggleDebug, EnterPlayState, EnterEditorState });
+            MainInputEventHandler.AddKeyPressHandlers(
+                new Keys[] { Keys.F1, Keys.F2, Keys.F3, Keys.F4 },
+                new Action[] 
+                {
+                    () => RealTimeDebug.Active = !RealTimeDebug.Active,
+                    () => Console.Active = !Console.Active,
+                    EnterPlayState,
+                    EnterEditorState
+                }
+            );
         }
 
         public void LoadContent(ContentManager contentManager)
@@ -77,11 +90,16 @@ namespace MonoGameTest2.Managers
             LevelManager.LoadContent(contentManager);
             UIManager.LoadContent(contentManager);
 
-            RealTimeDebug = new RealTimeDebug(new UIRectangle(0.02f, 0.02f, 0.96f, 0.3f));
+            RealTimeDebug = new RealTimeDebug(new UIRectangle(0.02f, 0.02f, 0.96f, 0.4f))
+            {
+                Active = false
+            };
             UIManager.AddElement(RealTimeDebug);
 
-            Console = new DebugConsole(new UIRectangle(0.58f, 0.02f, 0.4f, 0.325f));
-            Console.Active = false;
+            Console = new DebugConsole(new UIRectangle(0.58f, 0.02f, 0.4f, 0.325f))
+            {
+                Active = false
+            };
             UIManager.AddElement(Console);
 
             GameStateManager.AddState(new PlayState());
@@ -102,12 +120,6 @@ namespace MonoGameTest2.Managers
             PreviousKeyboardState = keyboardState;
             PreviousMouseState = Mouse.GetState();
             MainInputEventHandler.HandleInput();
-        }
-
-        public void ToggleDebug()
-        {
-            RealTimeDebug.Active = !RealTimeDebug.Active;
-            Console.Active = !Console.Active;
         }
 
         public void EnterPlayState()

@@ -5,6 +5,7 @@ using Microsoft.Xna.Framework.Input;
 
 using MonoGameTest2.Entities;
 using MonoGameTest2.Helpers;
+using MonoGameTest2.Managers;
 
 namespace MonoGameTest2.GameStates
 {
@@ -53,8 +54,8 @@ namespace MonoGameTest2.GameStates
         {
             var mouseState = Mouse.GetState();
 
-            _editorCursor.MousePosition = GameManager.LevelManager.WorldPositionToTilePosition(MainCamera.ScreenToWorld(mouseState.GetPosition()));
-            _editorCursor.TilePosition = new Vector2(_editorCursor.MousePosition.X / GameManager.LevelManager.TileSize.X, _editorCursor.MousePosition.Y / GameManager.LevelManager.TileSize.Y);
+            _editorCursor.MousePosition = LevelManager.WorldPositionToTilePosition(MainCamera.ScreenToWorld(mouseState.GetPosition()));
+            _editorCursor.TilePosition = new Vector2(_editorCursor.MousePosition.X / LevelManager.TileSize.X, _editorCursor.MousePosition.Y / LevelManager.TileSize.Y);
 
             if (mouseState.GetButtonDown(MouseButtons.MiddleButton))
             {
@@ -82,7 +83,9 @@ namespace MonoGameTest2.GameStates
 
             if (!blockMouseUpdates && mouseState.GetButtonPressed(MouseButtons.LeftButton))
             {
-                GameManager.LevelManager.Level.SetTile((uint)_editorCursor.TilePosition.X, (uint)_editorCursor.TilePosition.Y, new Levels.Level.Tile(Levels.Level.TileTypes.Wall));
+                var x = (uint)_editorCursor.TilePosition.X;
+                var y = (uint)_editorCursor.TilePosition.Y;
+                GameManager.LevelManager.Level.SetTile(x, y, new Levels.Level.Tile(x, y, Levels.Level.TileTypes.Wall));
             }
         }
 

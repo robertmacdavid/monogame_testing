@@ -39,9 +39,7 @@ namespace MonoGameTest2.Managers
         public void LoadContent(ContentManager contentManager)
         {
             DefaultFont = contentManager.Load<SpriteFont>("default_font");
-
-            PanelBackground = new Texture2D(GameManager.Instance.Game.GraphicsDevice, 1, 1);
-            PanelBackground.SetData(new Color[] { Color.White });
+            PanelBackground = GameManager.PIXEL_TEXTURE;
         }
 
         public void AddElement(UIElement element)

@@ -1,4 +1,6 @@
-﻿using System;
+﻿using Microsoft.Xna.Framework;
+using MonoGameTest2.Managers;
+using System;
 using System.Collections.Generic;
 using System.Xml;
 using System.Xml.Serialization;
@@ -15,12 +17,17 @@ namespace MonoGameTest2.Levels
 
         public struct Tile
         {
+            public uint X;
+            public uint Y;
             public TileTypes TileType;
             public uint TextureIndex;
             public Portal? Portal;
+            public bool Solid => TileType == TileTypes.Wall;
 
-            public Tile(TileTypes tileType)
+            public Tile(uint x, uint y, TileTypes tileType)
             {
+                X = x;
+                Y = y;
                 TileType = tileType;
                 TextureIndex = 0;
                 Portal = null;
@@ -103,6 +110,46 @@ namespace MonoGameTest2.Levels
             using (var writer = XmlWriter.Create(fileName))
             {
                 serializer.Serialize(writer, this);
+            }
+        }
+
+        public IEnumerable<Tile> GetAdjacentTiles(int x, int y)
+        {
+            for (var adjX = x - 1; adjX <= x + 1; adjX++)
+            {
+                if (adjX < 0 || adjX >= Width)
+                {
+                    continue;
+                }
+
+                for (var adjY = y - 1; adjY <= y + 1; adjY++)
+                {
+                    if (adjY < 0 || adjY >= Height)
+                    {
+                        continue;
+                    }
+
+                    var tile = GetTile((uint)adjX, (uint)adjY);
+
+                    if (tile.HasValue)
+                    {
+                        yield return tile.Value;
+                    }
+                }
+            }
+        }
+
+        public IEnumerable<Rectangle> GetPossibleCollisions(int x, int y)
+        {
+            foreach (var tile in GetAdjacentTiles(x, y))
+            {
+                if (!tile.Solid)
+                {
+                    continue;
+                }
+
+                var tileRectangle = new Rectangle((int)(tile.X * LevelManager.TileSize.X), (int)(tile.Y * LevelManager.TileSize.Y), (int)LevelManager.TileSize.X, (int)LevelManager.TileSize.Y);
+                yield return tileRectangle;
             }
         }
     }
