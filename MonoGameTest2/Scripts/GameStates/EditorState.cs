@@ -5,7 +5,9 @@ using Microsoft.Xna.Framework.Input;
 
 using MonoGameTest2.Entities;
 using MonoGameTest2.Helpers;
+using MonoGameTest2.Levels;
 using MonoGameTest2.Managers;
+using MonoGameTest2.UI;
 
 namespace MonoGameTest2.GameStates
 {
@@ -20,6 +22,7 @@ namespace MonoGameTest2.GameStates
         public override string Name => "Editor State";
 
         protected Camera MainCamera => GameManager.MainCamera;
+        protected LevelManager LevelManager => GameManager.LevelManager;
 
         private Sprite _lastTarget;
         private Rectangle? _lastCameraBounds;
@@ -31,6 +34,9 @@ namespace MonoGameTest2.GameStates
 
         private ContentManager _contentManager;
         private Texture2D _cursorTexture;
+
+        private TileTypes _currentTile;
+        private uint _currentTexture;
         
         public override void Initialize()
         {
@@ -46,6 +52,9 @@ namespace MonoGameTest2.GameStates
 
         public override void LoadContent()
         {
+            var panel = new UIPanel(new UIRectangle(0, 0.8f, 1, 0.2f));
+            UIManager.AddElement(panel);
+
             _contentManager = new ContentManager(GameManager.Game.Services, GameManager.ContentManager.RootDirectory);
             _cursorTexture = _contentManager.Load<Texture2D>("level_editor/cursor");
         }
@@ -81,11 +90,21 @@ namespace MonoGameTest2.GameStates
                 MainCamera.Zoom *= 1.1f;
             }
 
+            if (mouseState.GetButtonUp(MouseButtons.RightButton))
+            {
+                _currentTexture++;
+                
+                if (_currentTexture >= LevelManager.TileCounts[(int)_currentTile]) {
+                    _currentTile = (TileTypes)((int)(_currentTile + 1) % (int)TileTypes.TileTypeCount);
+                    _currentTexture = 0;
+                }                
+            }
+
             if (!blockMouseUpdates && mouseState.GetButtonPressed(MouseButtons.LeftButton))
             {
                 var x = (uint)_editorCursor.TilePosition.X;
                 var y = (uint)_editorCursor.TilePosition.Y;
-                GameManager.LevelManager.Level.SetTile(x, y, new Levels.Level.Tile(x, y, Levels.Level.TileTypes.Wall));
+                LevelManager.Level.SetTile(x, y, new Tile(x, y, _currentTile, _currentTexture));
             }
         }
 

@@ -29,7 +29,7 @@ namespace MonoGameTest2.Entities
         /// <param name="velocity">The velocity in tiles per second.</param>
         public void Move(Vector2 velocity)
         {
-            Position += velocity * LevelManager.TileSize * GameManager.Instance.DeltaTime;
+            Position += velocity * LevelManager.TileSize.ToVector2() * GameManager.Instance.DeltaTime;
         }
 
         public void Draw(SpriteBatch spriteBatch)

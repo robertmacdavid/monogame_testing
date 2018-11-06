@@ -9,6 +9,7 @@ namespace MonoGameTest2.GameStates
     {
         public abstract string Name { get; }
         protected GameManager GameManager => GameManager.Instance;
+        protected UIManager UIManager => GameManager.UIManager;
 
         public abstract void Initialize();
         public abstract void LoadContent();
