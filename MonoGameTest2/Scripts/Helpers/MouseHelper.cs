@@ -57,12 +57,12 @@ namespace MonoGameTest2.Helpers
 
         public static bool GetButtonDown(this MouseState mouseState, MouseButtons button)
         {
-            return mouseState.GetButtonPressed(button) && GameManager.Instance.PreviousMouseState.GetButtonReleased(button);
+            return mouseState.GetButtonPressed(button) && GameManager.PreviousMouseState.GetButtonReleased(button);
         }
 
         public static bool GetButtonUp(this MouseState mouseState, MouseButtons button)
         {
-            return mouseState.GetButtonReleased(button) && GameManager.Instance.PreviousMouseState.GetButtonPressed(button);
+            return mouseState.GetButtonReleased(button) && GameManager.PreviousMouseState.GetButtonPressed(button);
         }
 
         public static Vector2 GetPosition(this MouseState mouseState)
@@ -78,12 +78,12 @@ namespace MonoGameTest2.Helpers
 
         public static Vector2 GetPositionDelta(this MouseState mouseState)
         {
-            return (mouseState.GetPosition() - GameManager.Instance.PreviousMouseState.GetPosition());
+            return (mouseState.GetPosition() - GameManager.PreviousMouseState.GetPosition());
         }
 
         public static int GetScrollDelta(this MouseState mouseState)
         {
-            return mouseState.ScrollWheelValue - GameManager.Instance.PreviousMouseState.ScrollWheelValue;
+            return mouseState.ScrollWheelValue - GameManager.PreviousMouseState.ScrollWheelValue;
         }
     }
 }

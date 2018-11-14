@@ -36,6 +36,8 @@ namespace MonoGameTest2.UI
 
     public class UIRectangle
     {
+        public static UIRectangle Full = new UIRectangle(0, 0, 1, 1);
+
         public float X;
         public float Y;
         public float Width;

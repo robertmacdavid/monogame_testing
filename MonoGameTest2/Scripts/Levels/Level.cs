@@ -2,8 +2,6 @@
 using MonoGameTest2.Managers;
 using System;
 using System.Collections.Generic;
-using System.Xml;
-using System.Xml.Serialization;
 
 namespace MonoGameTest2.Levels
 {
@@ -19,7 +17,6 @@ namespace MonoGameTest2.Levels
         public byte TargetMapID;
     }
 
-    [Serializable]
     public struct Tile
     {
         public uint X;
@@ -27,8 +24,7 @@ namespace MonoGameTest2.Levels
         public TileTypes TileType;
         public uint TextureIndex;
         public bool Solid => TileType == TileTypes.Wall;
-
-        public Portal? Portal { get; set; }
+        public uint ID => ((uint)TileType << 16) | TextureIndex;
 
         public Tile(uint x, uint y, TileTypes tileType, uint textureIndex = 0)
         {
@@ -36,12 +32,6 @@ namespace MonoGameTest2.Levels
             Y = y;
             TileType = tileType;
             TextureIndex = textureIndex;
-            Portal = null;
-        }
-
-        public bool ShouldSerializePortal()
-        {
-            return Portal.HasValue;
         }
     }
 
@@ -52,17 +42,24 @@ namespace MonoGameTest2.Levels
         public Vector2 PlayerSpawn;
         public uint Width;
         public uint Height;
+        public uint[][] Tiles;
 
         // TODO: Maybe have tile sets for different enviroments?
         //public byte TileSet;
 
-        private readonly Tile[,] _tiles;
+        public Level()
+        {
+        }
 
         public Level(uint width, uint height)
         {
             Width = width;
             Height = height;
-            _tiles = new Tile[width, height];
+            Tiles = new uint[height][];
+            for (var i = 0; i < height; i++)
+            {
+                Tiles[i] = new uint[width];
+            }
         }
 
         public Tile? GetTile(uint x, uint y)
@@ -72,7 +69,8 @@ namespace MonoGameTest2.Levels
                 return null;
             }
 
-            return _tiles[x, y];
+            var tileID = Tiles[y][x];
+            return new Tile(x, y, (TileTypes)(tileID >> 16), tileID & ushort.MaxValue);
         }
 
         public void SetTile(uint x, uint y, Tile newTile)
@@ -82,16 +80,7 @@ namespace MonoGameTest2.Levels
                 return;
             }
 
-            _tiles[x, y] = newTile;
-        }
-
-        public void Serialize(string fileName)
-        {
-            var serializer = new XmlSerializer(typeof(Level));
-            using (var writer = XmlWriter.Create(fileName))
-            {
-                serializer.Serialize(writer, this);
-            }
+            Tiles[y][x] = newTile.ID;
         }
 
         public IEnumerable<Tile> GetAdjacentTiles(int x, int y)

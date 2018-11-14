@@ -12,9 +12,20 @@ namespace MonoGameTest2.GameStates
         protected UIManager UIManager => GameManager.UIManager;
 
         public abstract void Initialize();
-        public abstract void LoadContent();
+
+        public virtual void LoadContent()
+        {
+            LoadUI();
+        }
+
+        public virtual void UnloadContent()
+        {
+            UnloadUI();
+        }
+
         public abstract void Update(bool blockMouseUpdates);
         public abstract void Draw();
-        public abstract void UnloadContent();
+        public abstract void LoadUI();
+        public abstract void UnloadUI();
     }
 }

@@ -47,20 +47,36 @@ namespace MonoGameTest2.Managers
             _elements.Add(element);
         }
 
+        public void RemoveElement(UIElement element)
+        {
+            _elements.Remove(element);
+        }
+
         /// <summary>
         /// Updates any UI elements.
         /// </summary>
         /// <returns>Whether or not we should block mouse actions when updating entities.</returns>
         public bool Update()
         {
+            foreach (var element in _elements)
+            {
+                if (element.Active && element is IUIFocusable)
+                {
+                    var focusable = element as IUIFocusable;
+
+                    if (focusable.Focused)
+                    {
+                        focusable.FocusUpdate();
+                    }
+                }
+            }
+
             // TODO: Check other mouse buttons.
-            // TODO: Check if mouse is down over UI element.
             var mouseState = Mouse.GetState();
             var mousePosition = mouseState.GetScreenPosition();
             var mouseButton = mouseState.GetButtonUp(MouseButtons.LeftButton) ? MouseButtons.LeftButton : MouseButtons.None;
             var e = new UIMouseEventData(mousePosition, mouseButton);
-
-
+            
             var block = false;
             foreach (var element in _elements)
             {
@@ -74,18 +90,31 @@ namespace MonoGameTest2.Managers
         {
             var block = false;
 
-            if (element is IUIClickable && element.Active)
+            if (element.Active)
             {
-                var clickable = element as IUIClickable;
-
-                if (clickable.CheckMouseOver(e.Position))
+                if (element is IUIClickable)
                 {
-                    block = clickable.MouseOver(e);
+                    var clickable = element as IUIClickable;
+
+                    if (clickable.CheckMouseOver(e.Position))
+                    {
+                        block = clickable.MouseOver(e);
+                    }
+
+                    if (e.Button == MouseButtons.LeftButton && clickable.CheckReleased(e))
+                    {
+                        clickable.Click(e);
+                    }
                 }
 
-                if (e.Button == MouseButtons.LeftButton && clickable.CheckReleased(e))
+                if (element is IUIFocusable)
                 {
-                    clickable.Click(e);
+                    var focusable = element as IUIFocusable;
+
+                    if (focusable.Focused)
+                    {
+                        focusable.FocusUpdate();
+                    }
                 }
             }
 

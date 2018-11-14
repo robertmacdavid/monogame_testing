@@ -18,6 +18,7 @@ namespace MonoGameTest2.UI
     public interface IUIClickable
     {
         bool CheckMouseOver(Vector2 mousePosition);
+
         bool CheckReleased(UIMouseEventData e);
 
         /// <summary>
@@ -26,6 +27,7 @@ namespace MonoGameTest2.UI
         /// <param name="e">The event data for the mouse event.</param>
         /// <returns>Does this element block entity updates?</returns>
         bool MouseOver(UIMouseEventData e);
+
         void Click(UIMouseEventData e);
 
         // TODO: CheckPressed

@@ -4,7 +4,7 @@ using Microsoft.Xna.Framework.Graphics;
 
 namespace MonoGameTest2.UI
 {
-    class UIText : UIElement
+    public class Text : UIElement
     {
         public bool WordWrap { get; set; }
 
@@ -19,14 +19,14 @@ namespace MonoGameTest2.UI
 
         private StringBuilder _displayString;
 
-        public UIText(UIElement parent, UIRectangle bounds, Color? color = null, bool wordWrap = true) : base(parent, bounds)
+        public Text(UIElement parent, UIRectangle bounds, Color? color = null, bool wordWrap = true) : base(parent, bounds)
         {
             Color = color ?? Color.White;
             WordWrap = wordWrap;
             _displayString = new StringBuilder();
         }
 
-        public UIText(UIRectangle bounds, Color? color = null, bool wordWrap = true) : this(null, bounds, color, wordWrap) {  }
+        public Text(UIRectangle bounds, Color? color = null, bool wordWrap = true) : this(null, bounds, color, wordWrap) {  }
 
         private void SetValue(string value)
         {

@@ -8,6 +8,7 @@ using MonoGameTest2.Helpers;
 using MonoGameTest2.Levels;
 using MonoGameTest2.Managers;
 using MonoGameTest2.UI;
+using System.IO;
 
 namespace MonoGameTest2.GameStates
 {
@@ -37,6 +38,11 @@ namespace MonoGameTest2.GameStates
 
         private TileTypes _currentTile;
         private uint _currentTexture;
+
+        private Panel _optionsPanel;
+        private InputBox _fileNameInputBox;
+        private SelectorList _fileSelector;
+        private string[] _files;
         
         public override void Initialize()
         {
@@ -52,11 +58,42 @@ namespace MonoGameTest2.GameStates
 
         public override void LoadContent()
         {
-            var panel = new UIPanel(new UIRectangle(0, 0.8f, 1, 0.2f));
-            UIManager.AddElement(panel);
-
             _contentManager = new ContentManager(GameManager.Game.Services, GameManager.ContentManager.RootDirectory);
             _cursorTexture = _contentManager.Load<Texture2D>("level_editor/cursor");
+
+            base.LoadContent();
+        }
+
+        public override void LoadUI()
+        {
+            _optionsPanel = new Panel(new UIRectangle(0.8f, 0, 0.2f, 1f));
+
+            _fileSelector = new SelectorList(_optionsPanel, new UIRectangle(0, 0, 1, 0.4f));
+            var loadButton = new TextButton(_optionsPanel, new UIRectangle(0, 0.4f, 1, 0.05f), "Load Map", Color.Blue)
+            {
+                OnClick = (e) =>
+                {
+                    if (_fileSelector.Selected.HasValue)
+                    {
+                        var file = _files[_fileSelector.Selected.Value.Value];
+                        DebugConsole.WriteLine($"Loading level: {file}");
+                        LevelManager.LoadLevel(file);
+                    }
+                }
+            };
+            LoadLevelFiles();
+
+            _fileNameInputBox = new InputBox(_optionsPanel, new UIRectangle(0, 0.5f, 1, 0.05f));
+            var saveButton = new TextButton(_optionsPanel, new UIRectangle(0, 0.55f, 1, 0.05f), "Save Map", Color.Blue)
+            {
+                OnClick = (e) =>
+                {
+                    LevelManager.SaveLevel(_fileNameInputBox.Value);
+                    LoadLevelFiles();
+                }
+            };
+
+            UIManager.AddElement(_optionsPanel);
         }
 
         public override void Update(bool blockMouseUpdates)
@@ -151,6 +188,23 @@ namespace MonoGameTest2.GameStates
             GameManager.CameraController.Target = _lastTarget;
             MainCamera.CameraBounds = _lastCameraBounds;
             MainCamera.Zoom = 1;
+
+            base.UnloadContent();
+        }
+
+        public override void UnloadUI()
+        {
+            UIManager.RemoveElement(_optionsPanel);
+        }
+
+        private void LoadLevelFiles()
+        {
+            _fileSelector.Clear();
+            _files = LevelManager.GetLevelFiles();
+            for (var i = 0; i < _files.Length; i++)
+            {
+                _fileSelector.AddOption(new SelectorList.Option(Path.GetFileName(_files[i]), i));
+            }
         }
     }
 }

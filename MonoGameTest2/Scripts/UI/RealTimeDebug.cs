@@ -9,17 +9,17 @@ namespace MonoGameTest2.UI
         const string HEADER = "Debug Info\n";
 
         private StringBuilder _debugInfo;
-        private UIText _debugText;
+        private Text _debugText;
 
         public RealTimeDebug(UIRectangle bounds) : base(bounds)
         {
-            var debugPanel = new UIPanel(this, new UIRectangle(0, 0, 1, 1))
+            var debugPanel = new Panel(this, new UIRectangle(0, 0, 1, 1))
             {
                 FitToContent = true,
                 Padding = new Padding(0.05f),
             };
 
-            _debugText = new UIText(debugPanel, new UIRectangle(0, 0, 1, 1), Color.White, true);
+            _debugText = new Text(debugPanel, new UIRectangle(0, 0, 1, 1), Color.White, true);
             _debugInfo = new StringBuilder(HEADER);
         }
 

@@ -20,6 +20,9 @@ namespace MonoGameTest2.Managers
         private static GameManager _instance;
         public static GameManager Instance { get { return _instance ?? (_instance = new GameManager()); } }
 
+        public static KeyboardState PreviousKeyboardState;
+        public static MouseState PreviousMouseState;
+
         public Game1 Game;
         public ContentManager ContentManager;
         public SpriteBatch SpriteBatch;
@@ -35,8 +38,7 @@ namespace MonoGameTest2.Managers
         public GameTime GameTime;
         public float DeltaTime;
         public double CurrentTimeMS;
-        public KeyboardState PreviousKeyboardState;
-        public MouseState PreviousMouseState;
+
 
         private RenderTarget2D _nativeRenderTarget;
         private Rectangle _actualScreenRectangle;
@@ -96,7 +98,7 @@ namespace MonoGameTest2.Managers
             };
             UIManager.AddElement(RealTimeDebug);
 
-            Console = new DebugConsole(new UIRectangle(0.58f, 0.02f, 0.4f, 0.325f))
+            Console = new DebugConsole(new UIRectangle(0, 0, 1f, 0.05f))
             {
                 Active = false
             };

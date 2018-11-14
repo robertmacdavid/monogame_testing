@@ -56,5 +56,9 @@ namespace MonoGameTest2.GameStates
         {
             GameManager.ContentManager.Unload();
         }
+
+        public override void LoadUI() { }
+
+        public override void UnloadUI() { }
     }
 }

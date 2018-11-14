@@ -1,16 +1,19 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
-
 using MonoGameTest2.Helpers;
 using MonoGameTest2.Levels;
 using System;
+using System.IO;
+using System.Xml;
+using System.Xml.Serialization;
 
 namespace MonoGameTest2.Managers
 {
     public class LevelManager
     {
         public static readonly Point TileSize = new Point(16, 16);
+        public static readonly string RelativeLevelFilesPath = "levels" + Path.DirectorySeparatorChar;
 
         public Level Level;
 
@@ -19,6 +22,7 @@ namespace MonoGameTest2.Managers
         public int[] TileCounts { get; private set; }
 
         private Texture2D[] _tileSpriteSheets;
+        private XmlSerializer _serializer;
 
         public void LoadContent(ContentManager contentManager)
         {
@@ -33,6 +37,8 @@ namespace MonoGameTest2.Managers
 
                 TileCounts[i] = columns * rows;
             }
+
+            _serializer = new XmlSerializer(typeof(Level));
         }
 
         public void BuildLevel()
@@ -59,12 +65,6 @@ namespace MonoGameTest2.Managers
 
         public void Draw(SpriteBatch spriteBatch)
         {
-
-            foreach (var tileTexture in _tileSpriteSheets)
-            {
-                GameManager.Instance.Console.AddLine(tileTexture.Name);
-            }
-
             for (uint y = 0; y < Level.Height; y++)
             {
                 for (uint x = 0; x < Level.Width; x++)
@@ -87,6 +87,38 @@ namespace MonoGameTest2.Managers
             }
         }
 
+        public void SaveLevel(string fileName)
+        {
+            if (fileName == null || fileName.Length == 0 || fileName.IndexOfAny(Path.GetInvalidFileNameChars()) != -1)
+            {
+                return;
+            }
+
+            using (var writer = XmlWriter.Create(Path.Combine("levels", fileName + ".xml"), new XmlWriterSettings() { Indent = true }))
+            {
+                _serializer.Serialize(writer, Level);
+            }
+        }
+
+        public void LoadLevel(string path)
+        {
+            if (path == null || path.Length == 0 || path.IndexOfAny(Path.GetInvalidPathChars()) != -1)
+            {
+                return;
+            }
+
+            var serializer = new XmlSerializer(typeof(Level));
+            using (var reader = File.OpenText(path))
+            {
+                Level = (Level)_serializer.Deserialize(reader);
+            }
+        }
+
+        public static string[] GetLevelFiles()
+        {
+            return Directory.GetFiles(Path.Combine(Directory.GetCurrentDirectory(), RelativeLevelFilesPath), "*.xml");
+        }
+
         public static Vector2 WorldPositionToTile(Vector2 worldPosition)
         {
             return new Vector2
@@ -95,7 +127,6 @@ namespace MonoGameTest2.Managers
                 Y = (float)Math.Floor(worldPosition.Y / TileSize.Y)
             };
         }
-
 
         // TODO: Refactor this to return a point.
         public static Vector2 WorldPositionToTile(Point worldPosition)
@@ -112,6 +143,5 @@ namespace MonoGameTest2.Managers
         {
             return WorldPositionToTile(worldPosition) * TileSize.ToVector2();
         }
-
     }
 }

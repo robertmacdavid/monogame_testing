@@ -87,11 +87,15 @@
     <Compile Include="Scripts\Physics\ICollidable.cs" />
     <Compile Include="Scripts\UI\DebugConsole.cs" />
     <Compile Include="Scripts\UI\IUIClickable.cs" />
+    <Compile Include="Scripts\UI\IUIFocusable.cs" />
     <Compile Include="Scripts\UI\RealTimeDebug.cs" />
-    <Compile Include="Scripts\UI\UIButton.cs" />
-    <Compile Include="Scripts\UI\UIText.cs" />
+    <Compile Include="Scripts\UI\Button.cs" />
+    <Compile Include="Scripts\UI\InputBox.cs" />
+    <Compile Include="Scripts\UI\SelectorList.cs" />
+    <Compile Include="Scripts\UI\Text.cs" />
     <Compile Include="Scripts\UI\UIElement.cs" />
-    <Compile Include="Scripts\UI\UIPanel.cs" />
+    <Compile Include="Scripts\UI\Panel.cs" />
+    <Compile Include="Scripts\UI\TextButton.cs" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="MonoGame.Framework">
