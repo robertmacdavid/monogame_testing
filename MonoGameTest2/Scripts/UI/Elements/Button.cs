@@ -8,8 +8,8 @@ namespace MonoGameTest2.UI
         public ClickEventHandler OnClick { get; set; }
         public ClickEventHandler OnMouseOver { get; set; }
 
-        public Button(UIElement parent, UIDimension dimensions) : base(parent, dimensions) { }
-        public Button(UIDimension dimensions) : this(null, dimensions) { }
+        public Button(UIElement parent, UIDimension dimensions, Vector2? anchor = null) : base(parent, dimensions, anchor) { }
+        public Button(UIDimension dimensions, Vector2? anchor = null) : this(null, dimensions, anchor) { }
 
         public bool CheckReleased(UIMouseEventData e)
         {

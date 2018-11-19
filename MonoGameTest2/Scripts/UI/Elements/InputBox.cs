@@ -36,7 +36,7 @@ namespace MonoGameTest2.UI
         public InputBox(UIElement parent, UIDimension dimension, bool multiline = false) : base(parent, dimension)
         {
             _background = new Panel(this, UIDimension.Full, Color.Black);
-            _inputText = new Text(_background, UIDimension.Full, wordWrap: multiline);
+            _inputText = new Text(_background, UIDimension.Full, "", wordWrap: multiline);
         }
 
         public InputBox(UIDimension dimensions) : this(null, dimensions) { }

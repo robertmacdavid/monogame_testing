@@ -24,9 +24,8 @@ namespace MonoGameTest2.UI
                     HeightMode = UIDimensionModes.Stretch,
                     Top = 4,
                     Bottom = 4,
-                }, 
-                Color.White, 
-                true
+                },
+                ""
             );
             _debugInfo = new StringBuilder(HEADER);
         }

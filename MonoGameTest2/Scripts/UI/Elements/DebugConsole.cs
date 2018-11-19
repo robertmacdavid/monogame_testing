@@ -30,7 +30,7 @@ namespace MonoGameTest2.UI
             dimension.Height = DRAWN_LINES * 12;
 
             var panel = new Panel(this, UIDimension.Full);
-            _text = new Text(panel, UIDimension.Full, wordWrap: false);
+            _text = new Text(panel, UIDimension.Full, "", wordWrap: false);
             _lines = new Queue<string>(MAX_LINES);
 
             _instance = this;

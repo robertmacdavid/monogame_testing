@@ -78,7 +78,7 @@ namespace MonoGameTest2.Managers
             var e = new UIMouseEventData(mousePosition, mouseButton);
             
             var block = false;
-            foreach (var element in _elements)
+            foreach (var element in _elements) 
             {
                 block |= UpdateHelper(element, e);
             }

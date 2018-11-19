@@ -103,16 +103,15 @@ namespace MonoGameTest2.UI
             }
         }
 
-
-
         public Texture2D Texture { get; set; }
         public List<UIElement> Children { get; private set; }
         public Rectangle AbsoluteDimensions { get; private set; }
 
-        public UIElement(UIElement parent, UIDimension dimensions)
+        public UIElement(UIElement parent, UIDimension dimensions, Vector2? anchor = null)
         {
             _parent = parent;
             _dimensions = dimensions;
+            _anchor = anchor ?? AnchorPoints.TopLeft;
             _pivot = new Vector2(0.5f, 0.5f);
             Children = new List<UIElement>();
 
@@ -121,7 +120,7 @@ namespace MonoGameTest2.UI
             Active = true;
         }
 
-        public UIElement(UIDimension dimensions) : this(null, dimensions) { }
+        public UIElement(UIDimension dimensions, Vector2? anchor = null) : this(null, dimensions, anchor) { }
 
         private void SetActive(bool active)
         {

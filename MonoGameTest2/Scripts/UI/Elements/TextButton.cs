@@ -33,11 +33,7 @@ namespace MonoGameTest2.UI
         {
             _button = new Button(this, UIDimension.Full);
             _background = new Panel(_button, UIDimension.Full, color);
-            _text = new Text(_background, UIDimension.Full, wordWrap: false)
-            {
-                Anchor = AnchorPoints.Middle,
-                Value = text
-            };
+            _text = new Text(_background, UIDimension.Full, text, anchor: AnchorPoints.Middle, wordWrap: false);
         }
 
         public TextButton(UIDimension dimensions, string text, Color color) : this(null, dimensions, text, color) { }

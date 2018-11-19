@@ -17,14 +17,15 @@ namespace MonoGameTest2.UI
 
         private StringBuilder _displayString;
 
-        public Text(UIElement parent, UIDimension dimensions, Color? color = null, bool wordWrap = true) : base(parent, dimensions)
+        public Text(UIElement parent, UIDimension dimensions, string value, Vector2? anchor = null, Color? color = null, bool wordWrap = true) : base(parent, dimensions, anchor)
         {
             Color = color ?? Color.White;
             WordWrap = wordWrap;
             _displayString = new StringBuilder();
+            Value = value;
         }
 
-        public Text(UIDimension dimensions, Color? color = null, bool wordWrap = true) : this(null, dimensions, color, wordWrap) {  }
+        public Text(UIDimension dimensions, string value, Vector2? anchor = null, Color? color = null, bool wordWrap = true) : this(null, dimensions, value, anchor, color, wordWrap) {  }
 
         private void SetValue(string value)
         {
@@ -68,8 +69,14 @@ namespace MonoGameTest2.UI
                 _displayString.Append(value);
             }
 
-            //var newDimensions = defaultFont.MeasureString(_displayString.ToString());
-            //RelativeBounds = new UIRectangle(RelativeBounds.X, RelativeBounds.Y, newDimensions.X / Parent.AbsoluteBounds.Width, newDimensions.Y / Parent.AbsoluteBounds.Height);
+            var newDimensions = defaultFont.MeasureString(_displayString.ToString());
+            Dimensions = new UIDimension()
+            {
+                WidthMode = UIDimensionModes.Fixed,
+                Width = (int)newDimensions.X,
+                HeightMode = UIDimensionModes.Stretch,
+                Height = (int)newDimensions.Y
+            };
         }
 
         public override void Draw(SpriteBatch spriteBatch)
