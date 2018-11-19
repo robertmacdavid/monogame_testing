@@ -55,7 +55,13 @@ namespace MonoGameTest2.UI
                         Height = PixelsPerLine,
                     },
                     option.Name, 
-                    backgroundColor
+                    backgroundColor,
+                    AnchorPoints.MiddleLeft,
+                    new UIDimension()
+                    {
+                        WidthMode = UIDimensionModes.Stretch,
+
+                    }
                 )
                 {
                     Anchor = AnchorPoints.TopMiddle,

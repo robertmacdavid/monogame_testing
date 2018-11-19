@@ -29,13 +29,23 @@ namespace MonoGameTest2.UI
             set { _button.OnClick = value; }
         }
 
-        public TextButton(UIElement parent, UIDimension dimensions, string text, Color color) : base(parent, dimensions)
+        public TextButton(UIElement parent, UIDimension dimensions, string text, Color color, Vector2? textAnchor = null, UIDimension? textDimensions = null) : base(parent, dimensions)
         {
             _button = new Button(this, UIDimension.Full);
             _background = new Panel(_button, UIDimension.Full, color);
-            _text = new Text(_background, UIDimension.Full, text, anchor: AnchorPoints.Middle, wordWrap: false);
+            _text = new Text(
+                _background, 
+                textDimensions ?? new UIDimension()
+                {
+                    WidthMode = UIDimensionModes.Fixed,
+                    HeightMode = UIDimensionModes.Fixed,
+                },
+                text,
+                anchor: textAnchor ?? AnchorPoints.Middle,
+                wordWrap: false
+            );
         }
 
-        public TextButton(UIDimension dimensions, string text, Color color) : this(null, dimensions, text, color) { }
+        public TextButton(UIDimension dimensions, string text, Color color, Vector2? textAnchor = null) : this(null, dimensions, text, color, textAnchor) { }
     }
 }

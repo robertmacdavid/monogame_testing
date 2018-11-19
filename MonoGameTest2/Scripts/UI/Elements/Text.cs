@@ -69,14 +69,11 @@ namespace MonoGameTest2.UI
                 _displayString.Append(value);
             }
 
-            var newDimensions = defaultFont.MeasureString(_displayString.ToString());
-            Dimensions = new UIDimension()
-            {
-                WidthMode = UIDimensionModes.Fixed,
-                Width = (int)newDimensions.X,
-                HeightMode = UIDimensionModes.Stretch,
-                Height = (int)newDimensions.Y
-            };
+            var newSize = defaultFont.MeasureString(_displayString.ToString());
+            var newDimensions = Dimensions;
+            newDimensions.Width = (int)newSize.X;
+            newDimensions.Height = (int)newSize.Y;
+            Dimensions = newDimensions;
         }
 
         public override void Draw(SpriteBatch spriteBatch)
