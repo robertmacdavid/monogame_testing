@@ -6,36 +6,34 @@ namespace MonoGameTest2.UI
 {
     public class Text : UIElement
     {
-        public bool WordWrap { get; set; }
-
         private string _value;
         public string Value
         {
             get { return _value; }
             set { SetValue(value); }
         }
-
+        public bool WordWrap { get; set; }
         public Color Color { get; set; }
 
         private StringBuilder _displayString;
 
-        public Text(UIElement parent, UIRectangle bounds, Color? color = null, bool wordWrap = true) : base(parent, bounds)
+        public Text(UIElement parent, UIDimension dimensions, Color? color = null, bool wordWrap = true) : base(parent, dimensions)
         {
             Color = color ?? Color.White;
             WordWrap = wordWrap;
             _displayString = new StringBuilder();
         }
 
-        public Text(UIRectangle bounds, Color? color = null, bool wordWrap = true) : this(null, bounds, color, wordWrap) {  }
+        public Text(UIDimension dimensions, Color? color = null, bool wordWrap = true) : this(null, dimensions, color, wordWrap) {  }
 
         private void SetValue(string value)
         {
             _displayString.Clear();
             _value = value;
+            var defaultFont = UIManager.DefaultFont;
 
             if (WordWrap)
             {
-                var defaultFont = UIManager.DefaultFont;
                 var lines = Value.Split('\n');
                 var currentLineWidth = 0;
                 var spaceWidth = (int)defaultFont.MeasureString(" ").X;
@@ -48,7 +46,7 @@ namespace MonoGameTest2.UI
                     {
                         var wordSize = defaultFont.MeasureString(word);
 
-                        if (currentLineWidth + wordSize.X <= AbsoluteBounds.RealDimensions.Width)
+                        if (currentLineWidth + wordSize.X <= AbsoluteDimensions.Width)
                         {
                             currentLineWidth += (int)wordSize.X + spaceWidth;
                         }
@@ -69,13 +67,14 @@ namespace MonoGameTest2.UI
             {
                 _displayString.Append(value);
             }
+
+            //var newDimensions = defaultFont.MeasureString(_displayString.ToString());
+            //RelativeBounds = new UIRectangle(RelativeBounds.X, RelativeBounds.Y, newDimensions.X / Parent.AbsoluteBounds.Width, newDimensions.Y / Parent.AbsoluteBounds.Height);
         }
 
         public override void Draw(SpriteBatch spriteBatch)
         {
-            spriteBatch.DrawString(UIManager.DefaultFont, _displayString.ToString(), AbsoluteBounds.RealLocation, Color);
-            //var newSize = Managers.UIManager.PixelToUI(defaultFont.MeasureString(newValue));
-            //Resize(new UIRectangle(RelativeBounds.X, RelativeBounds.Y, newSize.X, newSize.Y));
+            spriteBatch.DrawString(UIManager.DefaultFont, _displayString.ToString(), AbsoluteDimensions.Location.ToVector2(), Color);
         }
     }
 }

@@ -1,6 +1,5 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
-
 using MonoGameTest2.Helpers;
 
 namespace MonoGameTest2.UI
@@ -34,22 +33,22 @@ namespace MonoGameTest2.UI
         public delegate void ChangeEventHandler(string e);
         public ChangeEventHandler OnChange { get; set; }
 
-        public InputBox(UIElement parent, UIRectangle bounds, bool multiline = false) : base(parent, bounds)
+        public InputBox(UIElement parent, UIDimension dimension, bool multiline = false) : base(parent, dimension)
         {
-            _background = new Panel(this, UIRectangle.Full, Color.Black);
-            _inputText = new Text(_background, UIRectangle.Full, wordWrap: multiline);
+            _background = new Panel(this, UIDimension.Full, Color.Black);
+            _inputText = new Text(_background, UIDimension.Full, wordWrap: multiline);
         }
 
-        public InputBox(UIRectangle bounds) : this(null, bounds) { }
+        public InputBox(UIDimension dimensions) : this(null, dimensions) { }
 
         public bool CheckMouseOver(Vector2 mousePosition)
         {
-            return AbsoluteBounds.Contains(mousePosition);
+            return AbsoluteDimensions.Contains(mousePosition);
         }
 
         public bool CheckReleased(UIMouseEventData e)
         {
-            return AbsoluteBounds.Contains(e.Position);
+            return AbsoluteDimensions.Contains(e.Position);
         }
 
         public bool MouseOver(UIMouseEventData e)

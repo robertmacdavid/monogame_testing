@@ -66,10 +66,50 @@ namespace MonoGameTest2.GameStates
 
         public override void LoadUI()
         {
-            _optionsPanel = new Panel(new UIRectangle(0.8f, 0, 0.2f, 1f));
+            _optionsPanel = new Panel(
+                new UIDimension()
+                {
+                    WidthMode = UIDimensionModes.Fixed,
+                    X = -48,
+                    Width = 96,
+                    HeightMode = UIDimensionModes.Stretch,
+                }
+            )
+            {
+                Anchor = AnchorPoints.TopRight,
+            };
 
-            _fileSelector = new SelectorList(_optionsPanel, new UIRectangle(0, 0, 1, 0.4f));
-            var loadButton = new TextButton(_optionsPanel, new UIRectangle(0, 0.4f, 1, 0.05f), "Load Map", Color.Blue)
+
+            _fileSelector = new SelectorList(
+                _optionsPanel,
+                new UIDimension()
+                {
+                    WidthMode = UIDimensionModes.Stretch,
+                    Left = 4,
+                    Right = 4,
+                    HeightMode = UIDimensionModes.Fixed,
+                    Y = 40,
+                    Height = 72,
+                }
+            )
+            {
+                Anchor = AnchorPoints.TopMiddle,
+            };
+
+            var loadButton = new TextButton(
+                _optionsPanel, 
+                new UIDimension()
+                {
+                    WidthMode = UIDimensionModes.Stretch,
+                    Left = 4,
+                    Right = 4,
+                    HeightMode = UIDimensionModes.Fixed,
+                    Y = 82,
+                    Height = 13,
+                }, 
+                "Load Map", 
+                Color.Blue
+            )
             {
                 OnClick = (e) =>
                 {
@@ -83,8 +123,30 @@ namespace MonoGameTest2.GameStates
             };
             LoadLevelFiles();
 
-            _fileNameInputBox = new InputBox(_optionsPanel, new UIRectangle(0, 0.5f, 1, 0.05f));
-            var saveButton = new TextButton(_optionsPanel, new UIRectangle(0, 0.55f, 1, 0.05f), "Save Map", Color.Blue)
+            _fileNameInputBox = new InputBox(
+                _optionsPanel, 
+                new UIDimension(){
+                    WidthMode = UIDimensionModes.Stretch,
+                    Left = 4,
+                    Right = 4,
+                    HeightMode = UIDimensionModes.Fixed,
+                    Y = 108,
+                    Height = 13,
+                }
+            );
+            var saveButton = new TextButton(
+                _optionsPanel, 
+                new UIDimension() {
+                    WidthMode = UIDimensionModes.Stretch,
+                    Left = 4,
+                    Right = 4,
+                    HeightMode = UIDimensionModes.Fixed,
+                    Y = 121,
+                    Height = 13,
+                },
+                "Save Map", 
+                Color.Blue
+            )
             {
                 OnClick = (e) =>
                 {
@@ -92,6 +154,7 @@ namespace MonoGameTest2.GameStates
                     LoadLevelFiles();
                 }
             };
+            
 
             UIManager.AddElement(_optionsPanel);
         }
@@ -170,8 +233,7 @@ namespace MonoGameTest2.GameStates
 
             if (GameManager.ShowDebugInfo)
             {
-                GameManager.RealTimeDebug.Append("Scroll Wheel Value", MainCamera.Zoom);
-                GameManager.RealTimeDebug.Append("Tile Position", _editorCursor.TilePosition);
+                RealTimeDebug.Append("File Selector Dimensions", _fileSelector.AbsoluteDimensions);
             }
 
             spriteBatch.Begin(transformMatrix: GameManager.MainCamera.TranslationMatrix);

@@ -1,8 +1,4 @@
 ﻿using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Input;
-
-using MonoGameTest2.Helpers;
-using MonoGameTest2.Managers;
 
 namespace MonoGameTest2.UI
 {
@@ -12,17 +8,20 @@ namespace MonoGameTest2.UI
         public ClickEventHandler OnClick { get; set; }
         public ClickEventHandler OnMouseOver { get; set; }
 
-        public Button(UIElement parent, UIRectangle bounds) : base(parent, bounds) { }
-        public Button(UIRectangle bounds) : this(null, bounds) { }
+        public Button(UIElement parent, UIDimension dimensions) : base(parent, dimensions) { }
+        public Button(UIDimension dimensions) : this(null, dimensions) { }
 
         public bool CheckReleased(UIMouseEventData e)
         {
-            return AbsoluteBounds.Contains(e.Position);
+            DebugConsole.WriteLine(AbsoluteDimensions);
+            DebugConsole.WriteLine(e.Position);
+
+            return AbsoluteDimensions.Contains(e.Position);
         }
 
         public bool CheckMouseOver(Vector2 mousePosition)
         {
-            return AbsoluteBounds.Contains(mousePosition);
+            return AbsoluteDimensions.Contains(mousePosition);
         }
 
         public bool MouseOver(UIMouseEventData e)

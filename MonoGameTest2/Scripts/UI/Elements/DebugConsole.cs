@@ -20,22 +20,22 @@ namespace MonoGameTest2.UI
         /// TODO: Input?
         /// </summary>
         /// <param name="bounds"></param>
-        public DebugConsole(UIRectangle bounds) : base(bounds)
+        public DebugConsole(UIDimension dimension) : base(dimension)
         {
             if (_instance != null)
             {
                 throw new System.Exception("Cannot create multiple instances of debug console.");
             }
 
-            bounds.Height = DRAWN_LINES * 0.05f;
+            dimension.Height = DRAWN_LINES * 12;
 
-            var panel = new Panel(this, new UIRectangle(0, 0, 1, 1));
-            _text = new Text(panel, new UIRectangle(0, 0, 1, 1), wordWrap: false);
+            var panel = new Panel(this, UIDimension.Full);
+            _text = new Text(panel, UIDimension.Full, wordWrap: false);
             _lines = new Queue<string>(MAX_LINES);
 
             _instance = this;
         }
-
+    
         public static void WriteLine<T>(T newLine)
         {
             if (_lines.Count == MAX_LINES)

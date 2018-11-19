@@ -14,7 +14,10 @@ namespace MonoGameTest2.Managers
     {
         public const int NATIVE_SCREEN_WIDTH = 480;
         public const int NATIVE_SCREEN_HEIGHT = 270;
+        public static int ScreenWidth => NATIVE_SCREEN_WIDTH * _zoom;
+        public static int ScreenHeight => NATIVE_SCREEN_HEIGHT * _zoom;
 
+        public static Game1 Game;
         public static Texture2D PIXEL_TEXTURE;
 
         private static GameManager _instance;
@@ -23,7 +26,10 @@ namespace MonoGameTest2.Managers
         public static KeyboardState PreviousKeyboardState;
         public static MouseState PreviousMouseState;
 
-        public Game1 Game;
+        private static Rectangle _actualScreenRectangle;
+        private static byte _zoom;
+        public static byte Zoom { get { return _zoom; } set { SetZoom(value); } }
+
         public ContentManager ContentManager;
         public SpriteBatch SpriteBatch;
 
@@ -39,11 +45,7 @@ namespace MonoGameTest2.Managers
         public float DeltaTime;
         public double CurrentTimeMS;
 
-
         private RenderTarget2D _nativeRenderTarget;
-        private Rectangle _actualScreenRectangle;
-        private byte _zoom;
-        public byte Zoom { get { return _zoom; } set { SetZoom(value); } }
 
         public bool ShowDebugInfo = true;
         public DebugConsole Console { get; private set; }
@@ -92,14 +94,33 @@ namespace MonoGameTest2.Managers
             LevelManager.LoadContent(contentManager);
             UIManager.LoadContent(contentManager);
 
-            RealTimeDebug = new RealTimeDebug(new UIRectangle(0.02f, 0.02f, 0.96f, 0.4f))
+            RealTimeDebug = new RealTimeDebug(
+                new UIDimension()
+                {
+                    WidthMode = UIDimensionModes.Stretch,
+                    HeightMode = UIDimensionModes.Fixed,
+                    Y = 49,
+                    Height = 99,
+                }
+            )
             {
+                Anchor = AnchorPoints.TopMiddle,
                 Active = false
             };
+
             UIManager.AddElement(RealTimeDebug);
 
-            Console = new DebugConsole(new UIRectangle(0, 0, 1f, 0.05f))
+            Console = new DebugConsole(
+                new UIDimension()
+                {
+                    WidthMode = UIDimensionModes.Stretch,
+                    HeightMode = UIDimensionModes.Fixed,
+                    Y = 49,
+                    Height = 99,
+                }
+            )
             {
+                Anchor = AnchorPoints.TopMiddle,
                 Active = false
             };
             UIManager.AddElement(Console);
@@ -167,7 +188,7 @@ namespace MonoGameTest2.Managers
             ContentManager.Unload();
         }
 
-        private void SetZoom(byte value)
+        private static void SetZoom(byte value)
         {
             _zoom = value;
             var width = NATIVE_SCREEN_WIDTH * _zoom;

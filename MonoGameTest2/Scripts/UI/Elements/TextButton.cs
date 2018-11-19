@@ -29,16 +29,17 @@ namespace MonoGameTest2.UI
             set { _button.OnClick = value; }
         }
 
-        public TextButton(UIElement parent, UIRectangle bounds, string text, Color color) : base(parent, bounds)
+        public TextButton(UIElement parent, UIDimension dimensions, string text, Color color) : base(parent, dimensions)
         {
-            _button = new Button(this, UIRectangle.Full);
-            _background = new Panel(_button, UIRectangle.Full, color);
-            _text = new Text(_background, UIRectangle.Full, wordWrap: false)
+            _button = new Button(this, UIDimension.Full);
+            _background = new Panel(_button, UIDimension.Full, color);
+            _text = new Text(_background, UIDimension.Full, wordWrap: false)
             {
+                Anchor = AnchorPoints.Middle,
                 Value = text
             };
         }
 
-        public TextButton(UIRectangle bounds, string text, Color color) : this(null, bounds, text, color) { }
+        public TextButton(UIDimension dimensions, string text, Color color) : this(null, dimensions, text, color) { }
     }
 }

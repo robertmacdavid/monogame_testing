@@ -73,7 +73,7 @@ namespace MonoGameTest2.Managers
 
             // TODO: Check other mouse buttons.
             var mouseState = Mouse.GetState();
-            var mousePosition = mouseState.GetScreenPosition();
+            var mousePosition = mouseState.GetPosition();
             var mouseButton = mouseState.GetButtonUp(MouseButtons.LeftButton) ? MouseButtons.LeftButton : MouseButtons.None;
             var e = new UIMouseEventData(mousePosition, mouseButton);
             

@@ -2,6 +2,7 @@
 
 using MonoGameTest2.Entities;
 using MonoGameTest2.Managers;
+using MonoGameTest2.UI;
 
 namespace MonoGameTest2.GameStates
 {
@@ -43,8 +44,8 @@ namespace MonoGameTest2.GameStates
         {
             var spriteBatch = GameManager.SpriteBatch;
 
-            GameManager.RealTimeDebug.Append("Player Position", Player.Position);
-            GameManager.RealTimeDebug.Append("Animation", Player.CurrentAnimation);
+            RealTimeDebug.Append("Player Position", Player.Position);
+            RealTimeDebug.Append("Animation", Player.CurrentAnimation);
 
             spriteBatch.Begin(transformMatrix: GameManager.MainCamera.TranslationMatrix);
             GameManager.LevelManager.Draw(spriteBatch);

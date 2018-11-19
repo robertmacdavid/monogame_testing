@@ -1,5 +1,4 @@
 ﻿using Microsoft.Xna.Framework;
-
 using System.Collections.Generic;
 
 namespace MonoGameTest2.UI
@@ -8,7 +7,7 @@ namespace MonoGameTest2.UI
     {
         private static readonly Color backgroundColor = Color.Black;
         private static readonly Color highlightColor = Color.Gray;
-        private const int PixelsPerLine = 24;
+        private const int PixelsPerLine = 13;
 
         public struct Option
         {
@@ -30,27 +29,39 @@ namespace MonoGameTest2.UI
 
         private List<TextButton> _optionButtons;
         private readonly int _maxEntries;
-        private readonly float _entryHeight;
 
-        public SelectorList(UIElement parent, UIRectangle bounds) : base(parent, bounds)
+        public SelectorList(UIElement parent, UIDimension dimensions) : base(parent, dimensions)
         {
             _optionButtons = new List<TextButton>();
             Options = new List<Option>();
 
-            var background = new Panel(this, UIRectangle.Full, backgroundColor);
-            _maxEntries = bounds.RealDimensions.Height / PixelsPerLine;
-            _entryHeight = RelativeBounds.Height / _maxEntries;
+            var background = new Panel(this, UIDimension.Full, backgroundColor);
+            _maxEntries = AbsoluteDimensions.Height / PixelsPerLine;
         }
 
-        public SelectorList(UIRectangle bounds) : this(null, bounds) { }
+        public SelectorList(UIDimension bounds) : this(null, bounds) { }
 
         public void AddOption(Option option)
         {
             Options.Add(option);
-            _optionButtons.Add(new TextButton(this, new UIRectangle(0, _optionButtons.Count * _entryHeight , 1, _entryHeight), option.Name, backgroundColor)
-            {
-                OnClick = (e) => ChangeOption(option.Value)
-            });
+            _optionButtons.Add(
+                new TextButton(
+                    this, 
+                    new UIDimension()
+                    {
+                        WidthMode = UIDimensionModes.Stretch,
+                        HeightMode = UIDimensionModes.Fixed,
+                        Y = _optionButtons.Count*PixelsPerLine + PixelsPerLine/2,
+                        Height = PixelsPerLine,
+                    },
+                    option.Name, 
+                    backgroundColor
+                )
+                {
+                    Anchor = AnchorPoints.TopMiddle,
+                    OnClick = (e) => ChangeOption(option.Value)
+                }
+            );
         }
 
         public void ChangeOption(int value)
