@@ -108,38 +108,53 @@ namespace MonoGameTest2.Entities
         private void CheckCollision()
         {
             var tilePos = LevelManager.WorldPositionToTile(Hitbox.Center).ToPoint();
+            var level = GameManager.Instance.LevelManager.Level;
+            var newVelocity = Velocity;
 
             _testCollisions.Clear();
-            foreach (var collision in GameManager.Instance.LevelManager.Level.GetPossibleCollisions(tilePos.X, tilePos.Y))
+            foreach (var wall in level.GetPossibleCollisions(tilePos.X, tilePos.Y))
             {
-                if (!Hitbox.Intersects(collision))
-                {
-                    continue;
-                }
-
+                // The amount the velocity should change to not put the object inside a wall.
                 var offset = new Vector2();
 
-                if (Velocity.X < 0) 
+                // Add X position first
+                var nextStep = Hitbox;
+                nextStep.X += (int)Velocity.X;
+                if (nextStep.Intersects(wall))
                 {
-                    offset.X += collision.Right - Hitbox.Left;
-                }
-                else if (Velocity.X > 0)
-                {
-                    offset.X -= collision.Left - Hitbox.Right;
+                    // Move this back.
+                    if (Hitbox.X < wall.X)
+                    {
+                        // Move this left.
+                        newVelocity.X = wall.Left - Hitbox.Right;
+                    }
+                    else
+                    {
+                        // Move this right.
+                        newVelocity.X = wall.Right - Hitbox.Left;
+                    }
                 }
 
-                if (Velocity.Y < 0)
+                // Then Y position.
+                nextStep.X -= (int)Velocity.X;
+                nextStep.Y += (int)Velocity.Y;
+                if (nextStep.Intersects(wall))
                 {
-                    offset.Y += collision.Bottom - Hitbox.Top;
-                }
-                else if (Velocity.Y > 0)
-                {
-                    offset.Y -= collision.Top - Hitbox.Bottom;
+                    // Move this back.
+                    if (Hitbox.Y < wall.Y)
+                    {
+                        // Move this up.
+                        newVelocity.Y = wall.Top - Hitbox.Bottom;
+                    }
+                    else
+                    {
+                        // Move this down.
+                        newVelocity.Y = wall.Bottom - Hitbox.Top;
+                    }
                 }
 
-                _testCollisions.Add(collision);
-
-                Velocity += offset;
+                _testCollisions.Add(wall);
+                Velocity = newVelocity;
                 Hitbox = new Rectangle(Hitbox.Location + offset.ToPoint(), new Point(16, 16));
             }
         }

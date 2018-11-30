@@ -8,6 +8,8 @@ namespace MonoGameTest2.UI
     {
         public Color Color;
 
+        public bool MousedOver { get; set; }
+
         public Panel(UIElement parent, UIDimension dimension, Color? color = null) : base(parent, dimension)
         {
             Color = color ?? new Color(0.2f, 0.2f, 0.2f, 0.7f);
@@ -40,5 +42,7 @@ namespace MonoGameTest2.UI
         {
             throw new System.Exception("This shouldn't execute.");
         }
+
+        public void MouseOut(UIMouseEventData e) { }
     }
 }

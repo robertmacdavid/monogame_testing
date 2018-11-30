@@ -7,14 +7,15 @@ namespace MonoGameTest2.UI
     /// </summary>
     public class TextButton : UIElement
     {
+        public Text Text;
+
         private Panel _background;
-        private Text _text;
         private Button _button;
 
         public string Value
         {
-            get { return _text.Value; }
-            set { _text.Value = value; }
+            get { return Text.Value; }
+            set { Text.Value = value; }
         }
 
         public Color Color
@@ -29,11 +30,23 @@ namespace MonoGameTest2.UI
             set { _button.OnClick = value; }
         }
 
-        public TextButton(UIElement parent, UIDimension dimensions, string text, Color color, Vector2? textAnchor = null, UIDimension? textDimensions = null) : base(parent, dimensions)
+        public Button.ClickEventHandler OnMouseOver
+        {
+            get { return _button.OnMouseOver; }
+            set { _button.OnMouseOver = value; }
+        }
+
+        public Button.ClickEventHandler OnMouseOut
+        {
+            get { return _button.OnMouseOut; }
+            set { _button.OnMouseOut = value; }
+        }
+
+        public TextButton(UIElement parent, UIDimension dimensions, string text, Color color, Vector2? textAnchor = null, UIDimension? textDimensions = null, Color? textColor = null) : base(parent, dimensions)
         {
             _button = new Button(this, UIDimension.Full);
             _background = new Panel(_button, UIDimension.Full, color);
-            _text = new Text(
+            Text = new Text(
                 _background, 
                 textDimensions ?? new UIDimension()
                 {
@@ -42,10 +55,11 @@ namespace MonoGameTest2.UI
                 },
                 text,
                 anchor: textAnchor ?? AnchorPoints.Middle,
+                color: textColor,
                 wordWrap: false
             );
         }
 
-        public TextButton(UIDimension dimensions, string text, Color color, Vector2? textAnchor = null) : this(null, dimensions, text, color, textAnchor) { }
+        public TextButton(UIDimension dimensions, string text, Color color, Vector2? textAnchor = null, Color? textColor = null) : this(null, dimensions, text, color, textAnchor) { }
     }
 }

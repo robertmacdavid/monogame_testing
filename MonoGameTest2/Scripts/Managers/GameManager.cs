@@ -20,15 +20,16 @@ namespace MonoGameTest2.Managers
         public static Game1 Game;
         public static Texture2D PIXEL_TEXTURE;
 
-        private static GameManager _instance;
-        public static GameManager Instance { get { return _instance ?? (_instance = new GameManager()); } }
-
         public static KeyboardState PreviousKeyboardState;
         public static MouseState PreviousMouseState;
 
-        private static Rectangle _actualScreenRectangle;
+        private static GameManager _instance;
+        public static GameManager Instance { get { return _instance ?? (_instance = new GameManager()); } }
+
         private static byte _zoom;
         public static byte Zoom { get { return _zoom; } set { SetZoom(value); } }
+
+        private static Rectangle _actualScreenRectangle;
 
         public ContentManager ContentManager;
         public SpriteBatch SpriteBatch;
@@ -76,13 +77,11 @@ namespace MonoGameTest2.Managers
             LevelManager.BuildLevel();
             CameraController.SetDeadzoneDimensions(96, 96);
             MainInputEventHandler.AddKeyPressHandlers(
-                new Keys[] { Keys.F1, Keys.F2, Keys.F3, Keys.F4 },
+                new Keys[] { Keys.F1, Keys.F2 },
                 new Action[] 
                 {
                     () => RealTimeDebug.Active = !RealTimeDebug.Active,
-                    () => Console.Active = !Console.Active,
-                    EnterPlayState,
-                    EnterEditorState
+                    () => Console.Active = !Console.Active
                 }
             );
         }
@@ -93,6 +92,7 @@ namespace MonoGameTest2.Managers
 
             LevelManager.LoadContent(contentManager);
             UIManager.LoadContent(contentManager);
+            GameStateManager.AddState(new MainMenuState());
 
             RealTimeDebug = new RealTimeDebug(
                 new UIDimension()
@@ -107,7 +107,6 @@ namespace MonoGameTest2.Managers
                 Anchor = AnchorPoints.TopMiddle,
                 Active = false
             };
-
             UIManager.AddElement(RealTimeDebug);
 
             Console = new DebugConsole(
@@ -124,8 +123,6 @@ namespace MonoGameTest2.Managers
                 Active = false
             };
             UIManager.AddElement(Console);
-
-            GameStateManager.AddState(new PlayState());
         }
 
         public void Update(GameTime gameTime)
@@ -143,21 +140,6 @@ namespace MonoGameTest2.Managers
             PreviousKeyboardState = keyboardState;
             PreviousMouseState = Mouse.GetState();
             MainInputEventHandler.HandleInput();
-        }
-
-        public void EnterPlayState()
-        {
-            if (!(GameStateManager.CurrentState is PlayState))
-            {
-                GameStateManager.RemoveState();
-            }
-        }
-        public void EnterEditorState()
-        {
-            if (!(GameStateManager.CurrentState is EditorState))
-            {
-                GameStateManager.AddState(new EditorState());
-            }
         }
 
         public void Draw(SpriteBatch spriteBatch)

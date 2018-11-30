@@ -107,6 +107,19 @@ namespace MonoGameTest2.UI
         public List<UIElement> Children { get; private set; }
         public Rectangle AbsoluteDimensions { get; private set; }
 
+        private bool _deleted;
+        public bool Deleted {
+            get { return _deleted; }
+            set
+            {
+                _deleted = value;
+                if (value)
+                {
+                    Active = false;
+                }
+            }
+        }
+
         public UIElement(UIElement parent, UIDimension dimensions, Vector2? anchor = null)
         {
             _parent = parent;

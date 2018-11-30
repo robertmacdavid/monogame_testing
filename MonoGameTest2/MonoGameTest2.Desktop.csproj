@@ -68,6 +68,7 @@
     <Compile Include="Scripts\Entities\Character.cs" />
     <Compile Include="Scripts\GameStates\GameState.cs" />
     <Compile Include="Scripts\GameStates\EditorState.cs" />
+    <Compile Include="Scripts\GameStates\MainMenuState.cs" />
     <Compile Include="Scripts\GameStates\PlayState.cs" />
     <Compile Include="Scripts\Helpers\ContentHelper.cs" />
     <Compile Include="Scripts\Helpers\Debug.cs" />
@@ -86,6 +87,7 @@
     <Compile Include="Scripts\Managers\UIManager.cs" />
     <Compile Include="Scripts\Physics\ICollidable.cs" />
     <Compile Include="Scripts\UI\Elements\DebugConsole.cs" />
+    <Compile Include="Scripts\UI\Elements\Image.cs" />
     <Compile Include="Scripts\UI\IUIClickable.cs" />
     <Compile Include="Scripts\UI\IUIFocusable.cs" />
     <Compile Include="Scripts\UI\Elements\RealTimeDebug.cs" />

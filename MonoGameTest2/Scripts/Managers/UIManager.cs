@@ -49,7 +49,7 @@ namespace MonoGameTest2.Managers
 
         public void RemoveElement(UIElement element)
         {
-            _elements.Remove(element);
+            element.Deleted = true;
         }
 
         /// <summary>
@@ -83,6 +83,8 @@ namespace MonoGameTest2.Managers
                 block |= UpdateHelper(element, e);
             }
 
+            _elements.RemoveAll(element => element.Deleted);
+
             return block;
         }
 
@@ -90,7 +92,7 @@ namespace MonoGameTest2.Managers
         {
             var block = false;
 
-            if (element.Active)
+            if (element.Active && !element.Deleted)
             {
                 if (element is IUIClickable)
                 {
@@ -98,8 +100,18 @@ namespace MonoGameTest2.Managers
 
                     if (clickable.CheckMouseOver(e.Position))
                     {
+                        clickable.MousedOver = true;
                         block = clickable.MouseOver(e);
                     }
+                    else
+                    {
+                        if (clickable.MousedOver)
+                        {
+                            clickable.MouseOut(e);
+                        }
+                        clickable.MousedOver = false;
+                    }
+                    
 
                     if (e.Button == MouseButtons.LeftButton && clickable.CheckReleased(e))
                     {

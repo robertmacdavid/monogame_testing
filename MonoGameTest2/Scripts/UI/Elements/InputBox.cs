@@ -32,6 +32,7 @@ namespace MonoGameTest2.UI
 
         public delegate void ChangeEventHandler(string e);
         public ChangeEventHandler OnChange { get; set; }
+        public bool MousedOver { get; set; }
 
         public InputBox(UIElement parent, UIDimension dimension, bool multiline = false) : base(parent, dimension)
         {
@@ -55,6 +56,8 @@ namespace MonoGameTest2.UI
         {
             return true;
         }
+
+        public void MouseOut(UIMouseEventData e) { }
 
         public void Click(UIMouseEventData e)
         {
@@ -88,5 +91,6 @@ namespace MonoGameTest2.UI
         {
             throw new System.NotImplementedException();
         }
+
     }
 }
