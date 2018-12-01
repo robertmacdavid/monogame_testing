@@ -21,6 +21,7 @@ namespace MonoGameTest2.Entities
         private InputEventHandler PlayerInputEvents;
 
         private List<Rectangle> _testCollisions;
+        private Rectangle _realHitbox;
 
         public Vector2 Velocity { get; private set; }
         public Rectangle Hitbox { get; set; }
@@ -29,7 +30,7 @@ namespace MonoGameTest2.Entities
         {
             Speed = 4;
             TravelDirection = new Vector2(0, 0);
-            Hitbox = new Rectangle((int)spawnPosition.X - 8, (int)spawnPosition.Y - 8, 16, 16);
+            Hitbox = new Rectangle(-8, -4, 8, 8);
             PlayerInputEvents = new InputEventHandler();
 
             PlayerInputEvents.AddKeyHoldHandlers(new Keys[4] { Keys.W, Keys.A, Keys.S, Keys.D },
@@ -78,7 +79,7 @@ namespace MonoGameTest2.Entities
                 }
             }
 
-            spriteBatch.DrawRectangle(Hitbox, Color.Blue);
+            spriteBatch.DrawRectangle(_realHitbox, Color.Blue);
 
             foreach (var collision in _testCollisions)
             {
@@ -95,8 +96,7 @@ namespace MonoGameTest2.Entities
             NormalizeTravelDir();
 
             Velocity = TravelDirection * Speed;
-            Hitbox = new Rectangle(Position.ToPoint() - new Point(Hitbox.Size.X/2, Hitbox.Size.Y/2), Hitbox.Size);
-
+            _realHitbox = new Rectangle(Position.ToPoint() + Hitbox.Center, Hitbox.Size);
             if (Velocity.LengthSquared() > float.Epsilon)
             {
                 CheckCollision();
@@ -107,31 +107,28 @@ namespace MonoGameTest2.Entities
 
         private void CheckCollision()
         {
-            var tilePos = LevelManager.WorldPositionToTile(Hitbox.Center).ToPoint();
+            var tilePos = LevelManager.WorldPositionToTile(_realHitbox.Center).ToPoint();
             var level = GameManager.Instance.LevelManager.Level;
             var newVelocity = Velocity;
 
             _testCollisions.Clear();
             foreach (var wall in level.GetPossibleCollisions(tilePos.X, tilePos.Y))
             {
-                // The amount the velocity should change to not put the object inside a wall.
-                var offset = new Vector2();
-
                 // Add X position first
-                var nextStep = Hitbox;
+                var nextStep = _realHitbox;
                 nextStep.X += (int)Velocity.X;
                 if (nextStep.Intersects(wall))
                 {
                     // Move this back.
-                    if (Hitbox.X < wall.X)
+                    if (_realHitbox.X < wall.X)
                     {
                         // Move this left.
-                        newVelocity.X = wall.Left - Hitbox.Right;
+                        newVelocity.X = wall.Left - _realHitbox.Right;
                     }
                     else
                     {
                         // Move this right.
-                        newVelocity.X = wall.Right - Hitbox.Left;
+                        newVelocity.X = wall.Right - _realHitbox.Left;
                     }
                 }
 
@@ -141,21 +138,20 @@ namespace MonoGameTest2.Entities
                 if (nextStep.Intersects(wall))
                 {
                     // Move this back.
-                    if (Hitbox.Y < wall.Y)
+                    if (_realHitbox.Y < wall.Y)
                     {
                         // Move this up.
-                        newVelocity.Y = wall.Top - Hitbox.Bottom;
+                        newVelocity.Y = wall.Top - _realHitbox.Bottom;
                     }
                     else
                     {
                         // Move this down.
-                        newVelocity.Y = wall.Bottom - Hitbox.Top;
+                        newVelocity.Y = wall.Bottom - _realHitbox.Top;
                     }
                 }
 
                 _testCollisions.Add(wall);
                 Velocity = newVelocity;
-                Hitbox = new Rectangle(Hitbox.Location + offset.ToPoint(), new Point(16, 16));
             }
         }
     }
