@@ -18,7 +18,6 @@ namespace MonoGameTest2.Entities
         private int _stand;
         private int _walkRight;
         private int _walkLeft;
-        private InputEventHandler PlayerInputEvents;
 
         private List<Rectangle> _testCollisions;
         private Rectangle _realHitbox;
@@ -31,14 +30,6 @@ namespace MonoGameTest2.Entities
             Speed = 4;
             TravelDirection = new Vector2(0, 0);
             Hitbox = new Rectangle(-8, -4, 8, 8);
-            PlayerInputEvents = new InputEventHandler();
-
-            PlayerInputEvents.AddKeyHoldHandlers(new Keys[4] { Keys.W, Keys.A, Keys.S, Keys.D },
-                                                new Action[4] { GoUp, GoLeft, GoDown, GoRight });
-
-            PlayerInputEvents.AddKeyHoldHandlers(new Keys[4] { Keys.Up, Keys.Left, Keys.Down, Keys.Right },
-                                                new Action[4] { GoUp, GoLeft, GoDown, GoRight });
-
             _testCollisions = new List<Rectangle>();
         }
 
@@ -91,8 +82,7 @@ namespace MonoGameTest2.Entities
 
         public void HandleInput()
         {
-            ClearTravelDir();
-            PlayerInputEvents.HandleInput();
+            TravelDirection = InputController.MoveDirection;
             NormalizeTravelDir();
 
             Velocity = TravelDirection * Speed;

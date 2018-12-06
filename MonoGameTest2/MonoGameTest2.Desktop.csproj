@@ -65,12 +65,14 @@
     <Compile Include="Scripts\Camera.cs" />
     <Compile Include="Scripts\Controllers\CameraController.cs" />
     <Compile Include="Scripts\Controllers\IInputController.cs" />
+    <Compile Include="Scripts\Controllers\InputController.cs" />
     <Compile Include="Scripts\Entities\Character.cs" />
     <Compile Include="Scripts\GameStates\GameState.cs" />
     <Compile Include="Scripts\GameStates\EditorState.cs" />
     <Compile Include="Scripts\GameStates\MainMenuState.cs" />
     <Compile Include="Scripts\GameStates\PlayState.cs" />
     <Compile Include="Scripts\Helpers\ContentHelper.cs" />
+    <Compile Include="Scripts\Helpers\GamePadHelper.cs" />
     <Compile Include="Scripts\Helpers\Debug.cs" />
     <Compile Include="Scripts\Helpers\KeyboardHelper.cs" />
     <Compile Include="Scripts\Helpers\MouseHelper.cs" />

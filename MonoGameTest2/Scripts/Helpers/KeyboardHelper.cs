@@ -1,7 +1,6 @@
 ﻿using Microsoft.Xna.Framework.Input;
-using System.Collections.Generic;
-
 using MonoGameTest2.Managers;
+using System.Collections.Generic;
 
 namespace MonoGameTest2.Helpers
 {

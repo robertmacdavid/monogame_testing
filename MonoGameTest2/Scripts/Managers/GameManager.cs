@@ -1,12 +1,11 @@
-﻿using System;
-using Microsoft.Xna.Framework;
+﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
-
 using MonoGameTest2.Controllers;
 using MonoGameTest2.GameStates;
 using MonoGameTest2.UI;
+using System;
 
 namespace MonoGameTest2.Managers
 {
@@ -22,6 +21,7 @@ namespace MonoGameTest2.Managers
 
         public static KeyboardState PreviousKeyboardState;
         public static MouseState PreviousMouseState;
+        public static GamePadState PreviousGamePadState;
 
         private static GameManager _instance;
         public static GameManager Instance { get { return _instance ?? (_instance = new GameManager()); } }
@@ -39,7 +39,6 @@ namespace MonoGameTest2.Managers
         public UIManager UIManager;
 
         public CameraController CameraController;
-        public InputEventHandler MainInputEventHandler;
         public Camera MainCamera;
 
         public GameTime GameTime;
@@ -72,18 +71,27 @@ namespace MonoGameTest2.Managers
                 new Vector2(NATIVE_SCREEN_WIDTH / 2, NATIVE_SCREEN_HEIGHT / 2)
             );
             CameraController = new CameraController();
-            MainInputEventHandler = new InputEventHandler();
 
             LevelManager.BuildLevel();
             CameraController.SetDeadzoneDimensions(96, 96);
-            MainInputEventHandler.AddKeyPressHandlers(
-                new Keys[] { Keys.F1, Keys.F2 },
-                new Action[] 
-                {
-                    () => RealTimeDebug.Active = !RealTimeDebug.Active,
-                    () => Console.Active = !Console.Active
-                }
-            );
+
+            // TODO: Add a config file for key binds.
+            InputController.RegisterInput(new ControllerInput(Keys.Z, ButtonStates.Down), InputActions.Accept);
+            InputController.RegisterInput(new ControllerInput(Keys.X, ButtonStates.Down), InputActions.Cancel);
+            InputController.RegisterInput(new ControllerInput(Keys.Z, ButtonStates.Down), InputActions.Talk);
+            InputController.RegisterInput(new ControllerInput(Keys.A, ButtonStates.Pressed), InputActions.MoveLeft);
+            InputController.RegisterInput(new ControllerInput(Keys.D, ButtonStates.Pressed), InputActions.MoveRight);
+            InputController.RegisterInput(new ControllerInput(Keys.W, ButtonStates.Pressed), InputActions.MoveUp);
+            InputController.RegisterInput(new ControllerInput(Keys.S, ButtonStates.Pressed), InputActions.MoveDown);
+            InputController.RegisterInput(new ControllerInput(Keys.F1, ButtonStates.Down), InputActions.ToggleRealTimeDebug);
+            InputController.RegisterInput(new ControllerInput(Keys.F2, ButtonStates.Down), InputActions.ToggleConsole);
+
+            InputController.RegisterInput(new ControllerInput(Buttons.B, ButtonStates.Down), InputActions.Accept);
+            InputController.RegisterInput(new ControllerInput(Buttons.A, ButtonStates.Down), InputActions.Cancel);
+            InputController.RegisterInput(new ControllerInput(Buttons.LeftThumbstickLeft, ButtonStates.Pressed), InputActions.MoveLeft);
+            InputController.RegisterInput(new ControllerInput(Buttons.LeftThumbstickRight, ButtonStates.Pressed), InputActions.MoveRight);
+            InputController.RegisterInput(new ControllerInput(Buttons.LeftThumbstickUp, ButtonStates.Pressed), InputActions.MoveUp);
+            InputController.RegisterInput(new ControllerInput(Buttons.LeftThumbstickDown, ButtonStates.Pressed), InputActions.MoveDown);
         }
 
         public void LoadContent(ContentManager contentManager)
@@ -137,9 +145,21 @@ namespace MonoGameTest2.Managers
             var blockMouseUpdate = UIManager.Update();
             GameStateManager.Update(blockMouseUpdate);
 
+            InputController.HandleInput();
+
             PreviousKeyboardState = keyboardState;
             PreviousMouseState = Mouse.GetState();
-            MainInputEventHandler.HandleInput();
+            PreviousGamePadState = GamePad.GetState(PlayerIndex.One);
+
+            if (InputController.HasInput(InputActions.ToggleRealTimeDebug))
+            {
+                RealTimeDebug.Active = !RealTimeDebug.Active;
+            }
+
+            if (InputController.HasInput(InputActions.ToggleConsole))
+            {
+                Console.Active = !Console.Active;
+            }
         }
 
         public void Draw(SpriteBatch spriteBatch)

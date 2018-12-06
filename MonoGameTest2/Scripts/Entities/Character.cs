@@ -9,32 +9,7 @@ namespace MonoGameTest2.Entities
         protected Vector2 TravelDirection;
         protected Vector2 FacingDirection;
 
-        public Character(Texture2D texture, Vector2 spawnPosition, int rows, int columns) : base(texture, spawnPosition, rows, columns)
-        {
-        }
-
-        public void GoLeft()
-        {
-            TravelDirection.X -= 1;
-        }
-        public void GoRight()
-        {
-            TravelDirection.X += 1;
-        }
-        public void GoDown()
-        {
-            TravelDirection.Y += 1;
-        }
-        public void GoUp()
-        {
-            TravelDirection.Y -= 1;
-        }
-
-        public void ClearTravelDir()
-        {
-            TravelDirection.X = 0f;
-            TravelDirection.Y = 0f;
-        }
+        public Character(Texture2D texture, Vector2 spawnPosition, int rows, int columns) : base(texture, spawnPosition, rows, columns) { }
 
         public void NormalizeTravelDir()
         {
