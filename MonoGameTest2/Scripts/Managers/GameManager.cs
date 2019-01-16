@@ -5,6 +5,7 @@ using Microsoft.Xna.Framework.Input;
 using MonoGameTest2.Controllers;
 using MonoGameTest2.GameStates;
 using MonoGameTest2.UI;
+using MonoGameTest2.Desktop.Scripts.Entities;
 using System;
 
 namespace MonoGameTest2.Managers
@@ -46,6 +47,8 @@ namespace MonoGameTest2.Managers
         public double CurrentTimeMS;
 
         private RenderTarget2D _nativeRenderTarget;
+
+        public CoroutineQueue CoroutineQueue;
 
         public bool ShowDebugInfo = true;
         public DebugConsole Console { get; private set; }
@@ -92,6 +95,8 @@ namespace MonoGameTest2.Managers
             InputController.RegisterInput(new ControllerInput(Buttons.LeftThumbstickRight, ButtonStates.Pressed), InputActions.MoveRight);
             InputController.RegisterInput(new ControllerInput(Buttons.LeftThumbstickUp, ButtonStates.Pressed), InputActions.MoveUp);
             InputController.RegisterInput(new ControllerInput(Buttons.LeftThumbstickDown, ButtonStates.Pressed), InputActions.MoveDown);
+
+            CoroutineQueue = new CoroutineQueue();
         }
 
         public void LoadContent(ContentManager contentManager)
@@ -160,6 +165,8 @@ namespace MonoGameTest2.Managers
             {
                 Console.Active = !Console.Active;
             }
+
+            CoroutineQueue.Update();
         }
 
         public void Draw(SpriteBatch spriteBatch)

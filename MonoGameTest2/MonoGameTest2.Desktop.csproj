@@ -100,6 +100,8 @@
     <Compile Include="Scripts\UI\UIElement.cs" />
     <Compile Include="Scripts\UI\Elements\Panel.cs" />
     <Compile Include="Scripts\UI\Elements\TextButton.cs" />
+    <Compile Include="Scripts\DataStructures\PriorityQueue.cs" />
+    <Compile Include="Scripts\Entities\Coroutine.cs" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="MonoGame.Framework">
@@ -169,6 +171,9 @@
   </ItemGroup>
   <ItemGroup />
   <ItemGroup />
+  <ItemGroup>
+    <Folder Include="Scripts\DataStructures\" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="$(MSBuildExtensionsPath)\MonoGame\v3.0\MonoGame.Content.Builder.targets" />
 </Project>
